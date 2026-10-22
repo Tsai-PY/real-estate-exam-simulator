@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>不動產經紀人 選擇題考試模擬器 (跨年度混合出題 · 完整解析)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --success: #16a34a;
+      --success-light: #f0fdf4;
+      --danger: #dc2626;
+      --danger-light: #fef2f2;
+      --warning: #d97706;
+      --warning-light: #fffbeb;
+      --purple: #7c3aed;
+      --purple-light: #f5f3ff;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --border-dark: #cbd5e1;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+      color: white;
+      padding: 1.25rem 2rem;
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .header-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brand { display: flex; align-items: center; gap: 0.75rem; }
+    .brand-icon {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+    }
+    .brand-text h1 { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.01em; }
+    .brand-text p { font-size: 0.825rem; color: #bfdbfe; }
+
+    .header-stats { display: flex; align-items: center; gap: 1.25rem; font-size: 0.95rem; }
+    .timer-badge {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 0.4rem 0.85rem;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    .progress-pill {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0.4rem 0.85rem;
+      border-radius: 9999px;
+      font-weight: 600;
+    }
+
+    main { max-width: 1100px; margin: 2rem auto; padding: 0 1.5rem; flex: 1; width: 100%; }
+
+    .screen { display: none; }
+    .screen.active { display: block; animation: fadeIn 0.25s ease-out; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Welcome / Setup */
+    .welcome-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
+      padding: 2.5rem;
+      text-align: center;
+      max-width: 880px;
+      margin: 0 auto;
+    }
+
+    .welcome-title { font-size: 1.85rem; font-weight: 800; color: #1e3a8a; margin-bottom: 0.75rem; }
+    .welcome-desc { color: var(--text-muted); margin-bottom: 2rem; font-size: 1.05rem; }
+
+    .section-label {
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-align: left;
+      margin-bottom: 0.75rem;
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .pool-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+      text-align: left;
+    }
+
+    .pool-btn {
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      position: relative;
+    }
+
+    .pool-btn:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .pool-btn.selected { border-color: var(--primary); background: var(--primary-light); }
+
+    .pool-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      background: #e2e8f0;
+      color: #475569;
+      border-radius: 6px;
+      font-weight: 600;
+      align-self: flex-start;
+    }
+    .pool-btn.selected .pool-badge { background: #dbeafe; color: var(--primary); }
+
+    .pool-name { font-size: 1.15rem; font-weight: 700; color: var(--text-main); }
+    .pool-meta { font-size: 0.85rem; color: var(--text-muted); }
+
+    .mode-selection {
+      background: #f1f5f9;
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .mode-opt { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; cursor: pointer; }
+    .mode-opt input { accent-color: var(--primary); width: 1.15rem; height: 1.15rem; }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.95rem 2.5rem;
+      font-size: 1.15rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+
+    .btn-secondary {
+      background: white;
+      color: var(--text-main);
+      border: 1px solid var(--border-dark);
+      border-radius: 10px;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { background: #f1f5f9; }
+
+    /* Quiz Layout */
+    .quiz-layout {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 2rem;
+      align-items: start;
+    }
+    @media (max-width: 900px) { .quiz-layout { grid-template-columns: 1fr; } }
+
+    .question-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      padding: 2rem;
+      position: relative;
+    }
+
+    .q-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tags-group { display: flex; gap: 0.5rem; align-items: center; }
+    .q-tag {
+      font-size: 0.85rem;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 0.3rem 0.75rem;
+      border-radius: 9999px;
+      font-weight: 600;
+    }
+    .q-year-tag {
+      font-size: 0.85rem;
+      color: #6b21a8;
+      background: #f3e8ff;
+      padding: 0.3rem 0.75rem;
+      border-radius: 9999px;
+      font-weight: 700;
+    }
+    .q-points { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+
+    .q-text {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+    }
+
+    .options-list { display: flex; flex-direction: column; gap: 0.85rem; margin-bottom: 2rem; }
+    .option-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+      padding: 1rem 1.2rem;
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-size: 1rem;
+      user-select: none;
+    }
+    .option-item:hover { border-color: #93c5fd; background: #f8fafc; }
+    .option-item.selected { border-color: var(--primary); background: var(--primary-light); font-weight: 600; }
+
+    .option-marker {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #f1f5f9;
+      border: 2px solid var(--border-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+      color: #475569;
+    }
+    .option-item.selected .option-marker { background: var(--primary); border-color: var(--primary); color: white; }
+    .option-item.correct { border-color: var(--success) !important; background: var(--success-light) !important; }
+    .option-item.correct .option-marker { background: var(--success) !important; border-color: var(--success) !important; color: white !important; }
+    .option-item.wrong { border-color: var(--danger) !important; background: var(--danger-light) !important; }
+    .option-item.wrong .option-marker { background: var(--danger) !important; border-color: var(--danger) !important; color: white !important; }
+
+    .option-content { flex: 1; padding-top: 2px; line-height: 1.5; }
+
+    .quiz-nav-btns {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .explanation-box {
+      margin-top: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      border-radius: 10px;
+      background: #eff6ff;
+      border-left: 5px solid var(--primary);
+      font-size: 0.95rem;
+      display: none;
+    }
+    .explanation-box.show { display: block; animation: fadeIn 0.2s ease-out; }
+    .exp-title {
+      font-weight: 700;
+      margin-bottom: 0.45rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.05rem;
+    }
+    .exp-detail-text { color: #1e293b; line-height: 1.7; font-size: 0.95rem; }
+
+    .quiz-sidebar {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      position: sticky;
+      top: 90px;
+    }
+    .sidebar-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .matrix-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; margin-bottom: 1.5rem; }
+    .matrix-cell {
+      height: 40px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+    .matrix-cell:hover { border-color: var(--primary); color: var(--primary); }
+    .matrix-cell.current { outline: 2px solid var(--primary); outline-offset: 1px; font-weight: 800; }
+    .matrix-cell.answered { background: #e0f2fe; border-color: #7dd3fc; color: #0369a1; }
+
+    .matrix-legend {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      padding-top: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+    .legend-item { display: flex; align-items: center; gap: 0.35rem; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+
+    .submit-quiz-btn {
+      width: 100%;
+      background: #059669;
+      color: white;
+      border: none;
+      padding: 0.85rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .submit-quiz-btn:hover { background: #047857; box-shadow: 0 4px 10px rgba(5, 150, 105, 0.3); }
+
+    /* Results */
+    .result-card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
+      padding: 2.5rem;
+      max-width: 950px;
+      margin: 0 auto;
+    }
+    .score-banner { text-align: center; padding-bottom: 2rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
+    .score-circle {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      margin: 0 auto 1.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 0 0 8px #dbeafe;
+      background: #f8fafc;
+    }
+    .score-num { font-size: 2.5rem; font-weight: 800; line-height: 1; color: var(--primary); }
+    .score-label { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+    .result-status { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .status-pass { color: var(--success); }
+    .status-fail { color: var(--danger); }
+
+    .result-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .summary-box { background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; text-align: center; }
+    .summary-val { font-size: 1.6rem; font-weight: 700; color: var(--text-main); }
+    .summary-name { font-size: 0.85rem; color: var(--text-muted); }
+
+    .review-section-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; }
+    .review-filter { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .filter-btn {
+      padding: 0.4rem 1rem;
+      border-radius: 9999px;
+      border: 1px solid var(--border-dark);
+      background: white;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .filter-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+    .review-item {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      background: white;
+    }
+    .review-item.wrong-border { border-left: 6px solid var(--danger); }
+    .review-item.correct-border { border-left: 6px solid var(--success); }
+
+    .review-exp-block {
+      margin-top: 1rem;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      line-height: 1.7;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+    .modal-box {
+      background: white;
+      border-radius: var(--radius);
+      padding: 2rem;
+      max-width: 440px;
+      width: 90%;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+    }
+    .modal-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .modal-desc { color: var(--text-muted); margin-bottom: 1.5rem; }
+    .modal-actions { display: flex; gap: 1rem; justify-content: center; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-icon">🏛️</div>
+        <div class="brand-text">
+          <h1>不動產經紀人 選擇題考試模擬器</h1>
+          <p>歷年真題跨年份混合出題題庫 · 滿分50分 (每題2分，共25題)</p>
+        </div>
+      </div>
+      <div class="header-stats" id="headerStats" style="display: none;">
+        <div class="timer-badge">
+          <span>⏱️</span>
+          <span id="timeRemaining">60:00</span>
+        </div>
+        <div class="progress-pill">
+          <span id="answeredCount">0</span> / 25 題
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div id="screenWelcome" class="screen active">
+      <div class="welcome-card">
+        <h2 class="welcome-title">不動產經紀人 選擇題真題模擬器</h2>
+        <p class="welcome-desc">系統支援「跨年度混合出題」，自動將不同年份之真題穿插混合，每回測驗 25 題四選一，附帶完整理由解析！</p>
+
+        <div class="section-label">🎯 選擇出題題庫範圍：</div>
+        <div class="pool-grid" id="poolGrid"></div>
+
+        <div class="section-label">⚙️ 選擇測驗模式：</div>
+        <div class="mode-selection">
+          <label class="mode-opt">
+            <input type="radio" name="quizMode" value="exam" checked>
+            <span>正式測驗模式 (限時60分鐘，交卷後結算成績並查看每題解析理由)</span>
+          </label>
+          <label class="mode-opt">
+            <input type="radio" name="quizMode" value="practice">
+            <span>練習模式 (無時間限制，點選選項立即揭曉正解與深度解析)</span>
+          </label>
+        </div>
+
+        <button class="btn-primary" onclick="startQuiz()">
+          開始 25 題模擬測驗 🚀
+        </button>
+      </div>
+    </div>
+
+    <div id="screenQuiz" class="screen">
+      <div class="quiz-layout">
+        <div class="quiz-main">
+          <div class="question-card">
+            <div class="q-header">
+              <div class="tags-group">
+                <span class="q-year-tag" id="qYearTag">114年真題</span>
+                <span class="q-tag" id="qSubjectTag">民法概要</span>
+              </div>
+              <span class="q-points">第 <span id="currentQIndex">1</span> 題 / 共 25 題 (每題2分)</span>
+            </div>
+
+            <div class="q-text" id="qQuestionText">題目載入中...</div>
+
+            <div class="options-list" id="qOptionsList"></div>
+
+            <div class="explanation-box" id="explanationBox">
+              <div class="exp-title" id="expTitle">
+                <span>💡 官方標準答案與詳解：</span>
+                <span id="expAnswer" style="color: var(--primary); font-size: 1.15rem; font-weight: 800;">A</span>
+              </div>
+              <div class="exp-detail-text" id="expDetail">
+                載入解析中...
+              </div>
+            </div>
+
+            <div class="quiz-nav-btns">
+              <button class="btn-secondary" id="prevBtn" onclick="navQuestion(-1)">← 上一題</button>
+              <button class="btn-secondary" id="nextBtn" onclick="navQuestion(1)">下一題 →</button>
+            </div>
+          </div>
+        </div>
+
+        <aside class="quiz-sidebar">
+          <div class="sidebar-title">
+            <span>題號作答卡</span>
+            <span style="font-size: 0.85rem; font-weight: 500; color: var(--text-muted);" id="sideModeLabel">考試模式</span>
+          </div>
+
+          <div class="matrix-grid" id="matrixGrid"></div>
+
+          <div class="matrix-legend">
+            <div class="legend-item">
+              <div class="legend-dot" style="background: #e0f2fe; border: 1px solid #7dd3fc;"></div>
+              <span>已作答</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background: white; border: 1px solid var(--border);"></div>
+              <span>未作答</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="outline: 2px solid var(--primary);"></div>
+              <span>目前題</span>
+            </div>
+          </div>
+
+          <button class="submit-quiz-btn" onclick="confirmSubmit()">
+            完成並交卷 📋
+          </button>
+        </aside>
+      </div>
+    </div>
+
+    <div id="screenResult" class="screen">
+      <div class="result-card">
+        <div class="score-banner">
+          <div class="score-circle">
+            <div class="score-num" id="finalScore">0</div>
+            <div class="score-label">總分 / 50 分</div>
+          </div>
+          <div class="result-status" id="resultStatus">及格通過！</div>
+          <p id="resultSubtext" style="color: var(--text-muted); font-size: 1rem;">恭喜通過標準！</p>
+        </div>
+
+        <div class="result-summary-grid">
+          <div class="summary-box">
+            <div class="summary-val" id="statTotal">25</div>
+            <div class="summary-name">測驗總題數</div>
+          </div>
+          <div class="summary-box">
+            <div class="summary-val" id="statCorrect" style="color: var(--success);">0</div>
+            <div class="summary-name">答對題數</div>
+          </div>
+          <div class="summary-box">
+            <div class="summary-val" id="statWrong" style="color: var(--danger);">0</div>
+            <div class="summary-name">答錯題數</div>
+          </div>
+          <div class="summary-box">
+            <div class="summary-val" id="statTimeUsed">00:00</div>
+            <div class="summary-name">測驗作答耗時</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-bottom: 2rem; justify-content: center;">
+          <button class="btn-primary" onclick="restartQuiz()">再來一回 25 題 (重新隨機抽題) 🔄</button>
+          <button class="btn-secondary" onclick="goHome()">回到首頁更換題庫 🏠</button>
+        </div>
+
+        <div class="review-section">
+          <h3 class="review-section-title">題目詳細檢視與答案解析理由</h3>
+          <div class="review-filter">
+            <button class="filter-btn active" onclick="filterReview('all', this)">全部題目 (25)</button>
+            <button class="filter-btn" id="filterWrongBtn" onclick="filterReview('wrong', this)">錯題回顧 (0)</button>
+            <button class="filter-btn" id="filterCorrectBtn" onclick="filterReview('correct', this)">答對題目 (0)</button>
+          </div>
+
+          <div id="reviewList"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="modal-overlay" id="confirmModal">
+    <div class="modal-box">
+      <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">⚠️</div>
+      <h3 class="modal-title">確定要交卷嗎？</h3>
+      <p class="modal-desc" id="modalUnansweredNote">交卷後將立即計算總分並提供對答案解析。</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal()">繼續作答</button>
+        <button class="btn-primary" onclick="doFinalSubmit()">確定交卷</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const RAW_EXAM_DATA = {"114年真題": {"民法概要": [{"id": 1, "subject": "民法概要", "question": "依我國民法有關死亡宣告之規定,下述何者錯誤?", "options": {"A": "失蹤人遺留之與他人共有不動產之共有人,得聲請對失蹤人為死亡宣告", "B": "失蹤人已年滿 80 歲,其失蹤期間應滿 3 年後,始得被聲請死亡宣告", "C": "失蹤人受死亡宣告後,生存歸來時,得聲請地檢署撤銷死亡宣告", "D": "受死亡宣告之失蹤人實際上仍生存時,其權利能力不因死亡宣告而喪失"}, "answer": "C", "explanation": "【解析】選(C)。依家事事件法第159條及民法第8條規定，失蹤人受死亡宣告後尚生存者，應由檢察官或利害關係人向「管轄法院」聲請撤銷死亡宣告裁定，而非向地檢署聲請，故(C)錯誤。(A)共有不動產之共有人為利害關係人，得聲請死亡宣告；(B)失蹤人年滿80歲者，失蹤期間滿3年得為死亡宣告；(D)死亡宣告僅為推定死亡，實際上仍生存時，權利能力不消滅。", "year": "114年"}, {"id": 2, "subject": "民法概要", "question": "我國民法修正時,增訂有關監護宣告及輔助宣告制度之規定。依現行民法相關之規定,下列何者 錯誤?", "options": {"A": "受監護宣告之成年人,無行為能力", "B": "成年人因精神障礙或其他心智缺陷,致其辨識其意思表示效果之能力顯有不足者,得因聲請, 對其為監護之宣告", "C": "受監護宣告之成年人,仍保有完全之權利能力", "D": "受輔助宣告之成年人逕自締結汽車之買賣契約,該契約不因欠缺輔助人之事前同意而無效"}, "answer": "B", "explanation": "【解析】選(B)。依民法第14條第1項，應受監護宣告者為「致不能為意思表示或受意思表示，或不能辨識其意思表示之效果者」；若僅為「顯有不足」者，依民法第15-1條係聲請為「輔助之宣告」，而非監護宣告，故(B)錯誤。(A)受監護宣告之人無行為能力；(C)受監護宣告僅限制行為能力，權利能力仍完全享有；(D)汽車買賣並非民法第15條之2第1項各款必須經輔助人同意之行為（非不動產、船舶、航空器或重要財產處分），故不因欠缺輔助人事准而無效。", "year": "114年"}, {"id": 3, "subject": "民法概要", "question": "下列敘述,何者與民法法人之規定並不相容?", "options": {"A": "民法關於公益社團法人之設立,係採取許可主義", "B": "法人解散後,在清算程序中,在清算之必要範圍內,仍具有法人格", "C": "法人之權利能力,受到性質上之限制,因此無法享有民法賦予自然人所有之人格權利", "D": "財團法人之設立,捐助人亦得以遺囑捐助之方式為之,且以此種方式設立之財團法人,無須訂 立捐助章程"}, "answer": "C", "explanation": "【解析】選(C)。依民法第26條規定：「法人於法令限制內，有享受權利負擔義務之能力。但專屬於自然人之權利義務，不在此限。」法人雖不能享有人格權中的生命權、身體權、健康權等，但仍享有姓名權（名稱權）、名譽權、信用權等，並非「無法享有自然人所有之人格權利」，故(C)不相容。", "year": "114年"}, {"id": 4, "subject": "民法概要", "question": "甲當選 A 法人董事,準備大顯身手,下列敘述何者錯誤?", "options": {"A": "就 A 法人一切事務,甲可代表 A 法人", "B": "A 法人可僅設甲一位董事", "C": "A 法人若對甲董事之代表權加以限制,其限制得對抗任何第三人", "D": "若 A 法人僅有甲與丙兩位董事,則該法人事務之執行,若兩人意見相左,則恐陷入表決的僵局"}, "answer": "C", "explanation": "【解析】選(C)。依民法第27條第3項規定：「對於董事代表權所加之限制，不得對抗善意第三人。」選項敘述為「得對抗任何第三人」，漏掉善意第三人之保護要件，故(C)錯誤。(A)董事就法人一切事務對外代表法人；(B)法人得置董事一人或數人；(D)董事數人時執行職務原則由過半數決定，僅二人且相左時恐陷入僵局。", "year": "114年"}, {"id": 5, "subject": "民法概要", "question": "有關自然人從事有效法律行為之情形,依現行民法規定,應以具備完全之行為能力為其要件。對 此,下列相關之選項何者正確?", "options": {"A": "年滿 16 歲之人,取得完全行為能力", "B": "15 歲之人得逕行有效撤銷被他人詐欺而締結日常生活所需之買賣契約", "C": "14 歲之未成年人得有效書立遺囑", "D": "某成年人被法院為輔助之宣告,若未得輔助人事前同意,即締結消費借貸契約,其得於法院撤 銷該輔助宣告後,承認該消費借貸契約,使之逕行生效"}, "answer": "D", "explanation": "【解析】選(D)。受輔助宣告之人未得輔助人同意而為民法第15條之2第1項第4款之消費借貸，其契約效力未定。當法院撤銷輔助宣告後，該人回復完全行為能力，得本於本人地位承認該消費借貸契約使其生效。(A)我國民法已將成年年齡下修為滿18歲；(B)15歲為限制行為能力人，意思表示之撤銷非日常生活所必需，不得逕行獨立為之；(C)依民法第1186條第2項，滿16歲始得獨立立遺囑。", "year": "114年"}, {"id": 6, "subject": "民法概要", "question": "民法規定權利客體中動產、不動產之定義、種類及變動之法定方式;依該規定之內容,下列何者 屬於正確之敘述?", "options": {"A": "甲在所有 A 地種植芭樂樹,樹上之芭樂成熟時,即已成為獨立之動產", "B": "甲為慶祝關聖帝君生日臨時搭建完成之表演舞台,屬於甲獨立取得之定著物所有權", "C": "甲移轉買賣標的物之 A 地予乙,甲、乙完成 A 地所有權讓與合意並交付 A 地後,乙即成為 A 地之新所有權人", "D": "甲在 A 地池塘養殖金魚,池中金魚所生金魚苗,由甲取得該金魚苗之獨立動產物權"}, "answer": "D", "explanation": "【解析】選(D)。依民法第66條及第70條規定，池中所生金魚苗為天然孳息，在分離或取得時由收取權人（甲）取得其所有權。(A)芭樂尚未採摘分離前，仍屬土地之成分，不構成獨立動產；(B)臨時搭建之舞台缺乏固定性與永久繼續性，非定著物；(C)不動產物權依法律行為移轉者，非經登記不生效力（民法第758條），僅讓與合意並交付尚未取得所有權。", "year": "114年"}, {"id": 7, "subject": "民法概要", "question": "不同之權利主體以法律行為方式,形成了彼此間之法律關係。嗣後,當事人一方發現自己已為之 意思表示發生錯誤,乃依民法第 88 條規定行使撤銷權。下列相關之敘述,何者錯誤?", "options": {"A": "該錯誤之意思表示若因表意人之過失所致時,表意人不得撤銷其所為之意思表示", "B": "該錯誤必須在交易上被認為具有重要性", "C": "錯誤之表意人必須在意思表示後,於 2 年內行使撤銷權,反之於除斥期間經過後,該法律關係 即應繼續有效存續", "D": "錯誤之表意人撤銷其意思表示後,對於相對人應承擔信賴該法律行為有效而生之損害賠償責任"}, "answer": "C", "explanation": "【解析】選(C)。依民法第90條規定：「前二條之撤銷權，自意思表示後，經過一年不行使而消滅。」除斥期間為1年而非2年，故(C)錯誤。(A)依民法第88條第1項但書，表意人有過失者不得撤銷；(B)錯誤須在交易上認為重要；(D)依民法第91條，表意人撤銷錯誤意思表示對信賴有效而受損害之相對人應負信賴利益損害賠償責任。", "year": "114年"}, {"id": 8, "subject": "民法概要", "question": "關於無因管理之制度,下列何者非屬我國民法相關規範之內容?", "options": {"A": "無因管理人誤將客觀上屬於自己事務當作他人之事務,而為事務之管理者,不成立民法之無因 管理", "B": "無因管理人違反本人明示或可得推知之意思,代本人繳納贈與稅捐,得依民法第 176 條之規定, 請求本人返還", "C": "管理人為免除本人生命之急迫危險,因重大過失造成本人財產上之損害,亦無須負損害賠償的 責任", "D": "管理人明知為他人事務,卻違反本人明示或可得推知之意思或僅為自己利益,而為他人事務之 管理者,本人主張管理事務之利益時,對管理人負第 176 條第 1 項之義務,以其所得利益為限"}, "answer": "C", "explanation": "【解析】選(C)。依民法第175條規定：「管理人為免除本人之生命、身體或財產上之急迫危險，而為事務之管理時，對於因其管理所生之損害，除有故意或重大過失者外，不負賠償之責。」因此若有「重大過失」造成損害，仍須負責，選項稱無須負責故(C)錯誤。", "year": "114年"}, {"id": 9, "subject": "民法概要", "question": "甲授與乙代理權,並委任乙與丙商談甲買受丙所有房屋及辦理移轉所有權之事宜。下列敘述何者 錯誤?", "options": {"A": "本件代理權的授與和委任契約二者均須書面", "B": "若丙自始至終不知道乙為甲的代理人,且債權契約和物權契約當事人簽乙的名字,則本件法律 效果無法歸屬於甲", "C": "若甲知道丙欺騙乙,把房屋的優點講得天花亂墜,但甲仍要乙代理他買下房屋,則甲事後不得 主張受詐欺撤銷意思表示", "D": "甲跟乙說好,最多出價 1 億元,1 億元的事情沒寫在書面,乙和丙講價的結果,被丙說服用行 情價 1 億 1 千萬簽訂契約。該買賣契約在 1 億元價金的範圍內有效"}, "answer": "D", "explanation": "【解析】選(D)。代理人逾越代理權限（最多1億卻以1.1億簽約），其效力為「狹義無權代理」，依民法第170條非經本人承認對本人不生效力，並非直接在1億元範圍內有效，故(D)錯誤。(A)委任與代理權授與原則上為不要式契約，不以書面為必要（但不動產移轉物權行為需書面，本選項亦點出其爭點，但(D)明顯違背無權代理法理）。", "year": "114年"}, {"id": 10, "subject": "民法概要", "question": "下述情形,何者不符合我國民法侵權行為之規定?", "options": {"A": "加害人因過失致直接被害人死亡,因直接被害人已喪失權利能力,無須對直接被害人負非財產 上之損害賠償", "B": "承攬人於執行承攬事務不法侵害他人之權利,除定作人於定作或指示有過失者,原則上定作人 無須負損害賠償責任", "C": "限制行為能力人不法侵害他人權利,且於行為時無識別能力,其法定代理人對被害人亦無須負 擔賠償責任", "D": "受僱人執行職務,因過失不法侵害他人之權利,如僱用人對於受僱人已盡選任、監督相當之注 意義務,僱用人不負賠償責任"}, "answer": "C", "explanation": "【解析】選(C)。依民法第187條第1項但書及第2項，行為時無識別能力者行為人不負責任，但此時應由其法定代理人負損害賠償責任（法定代理人之監督責任），法定代理人除非能證明監督並無疏懈或縱加相當監督仍不免發生損害，否則仍須負賠償責任，故(C)錯誤。", "year": "114年"}, {"id": 11, "subject": "民法概要", "question": "甲賣給乙一隻狗狗,名喚 S,乙光看甲提供的 S 犬照片就喜歡的不得了,馬上承諾以 10 萬元的價 金訂立契約。下列何者錯誤?", "options": {"A": "若 S 實則在甲、乙訂立契約前已死亡,則甲、乙契約無效", "B": "若 S 身上有跳蚤,並傳染給乙的貓咪 B 和乙家的環境,則甲應負加害給付責任", "C": "若 S 其實是甲母的狗,僅因甲母出國,暫時寄放於甲處,則乙即使已經把 S 抱回家照顧,乙絕 不可能取得 S 的所有權", "D": "若乙向甲主張交付 S,甲得主張同時履行抗辯"}, "answer": "C", "explanation": "【解析】選(C)。狗為動產，甲占有該狗外觀具有權利推定，乙若善意受讓並受交付，依民法第801條及第948條可主張善意取得該狗所有權，選項稱「絕不可能取得」故(C)錯誤。(A)訂約前標的物已死亡，屬自始客觀給付不能，依民法第246條契約無效；(B)給付物有瑕疵致買受人固有利益受損，成立加害給付；(D)買賣為雙務契約，得主張同時履行抗辯。", "year": "114年"}, {"id": 12, "subject": "民法概要", "question": "甲將房屋租給乙。下列何者正確?", "options": {"A": "租期若超過 1 年,且未寫書面契約,則租賃契約無效", "B": "若未特別約定,則乙有權將其中的房間分租給丙", "C": "若未特別約定,則乙有權將承租人的地位債權讓與給丙", "D": "若雙方約定租期 3 年,3 年過後乙默默繳房租,甲默默收房租,則雙方均不得主張租賃契約默示更新"}, "answer": "B", "explanation": "【解析】選(B)。依民法第443條第1項：「承租人非經出租人承諾，不得將租賃物轉租於他人。但租賃物為房屋者，除有反對之約定外，承租人得將其一部轉租於他人。」故房屋一部轉租在未特約排除時為合法允許，(B)正確。(A)不動產租賃逾一年未以書面訂立者視為不定期限，非無效；(C)承租人地位讓與涉及債務承擔，未經出租人同意不得為之；(D)租期屆滿繼續使用且出租人不即表示反對，視為以不定期限繼續契約（默示更新）。", "year": "114年"}, {"id": 13, "subject": "民法概要", "question": "對於權利主體間之贈與契約,依我國民法規定,下列何者為正確之論述?", "options": {"A": "在經公證之贈與契約,贈與人因可歸責之事由致給付遲延,受贈人得依民法第 231 條之規定請 求贈與人對於遲延給付造成之損害,負賠償責任", "B": "依現行民法之規定,以不動產為標的之贈與契約,屬於具要物性之法律行為", "C": "贈與人所贈與之標的物本身具有瑕疵,贈與人應負無過失之擔保責任", "D": "贈與人所贈與之標的物具有瑕疵,造成受贈人之損害,僅於贈與人故意不告知其瑕疵或保證其 無瑕疵時,始得請求賠償"}, "answer": "D", "explanation": "【解析】選(D)。依民法第411條規定：「贈與之物或權利如有瑕疵，贈與人於受贈人不負擔保責任。但贈與人故意不告知其瑕疵或保證其無瑕疵者，對於受贈人因瑕疵所生之損害，負賠償之義務。」故(D)正確。(A)贈與為無償契約，贈與人遲延給付依民法第410條僅就故意或重大過失負責；(B)贈與為諾成契約，非要物契約；(C)贈與人原則不負物之瑕疵擔保責任。", "year": "114年"}, {"id": 14, "subject": "民法概要", "question": "甲、乙兩人合夥開了一家小麵館 M,生意興隆。下列何者錯誤?", "options": {"A": "如甲在麵館以外之場所猥褻 K,乙無須對 K 負連帶損害賠償責任", "B": "麵體供應商 J 多次索取買賣價金均無果,J 得以 M 為被告請求履行債務", "C": "甲、乙兩人想把 M 收起來,尚須經清算程序", "D": "M 麵館的餐具是甲提供的、攤車是乙提供的,當麵館持續在營業時,餐具的所有權仍是甲的、 攤車的所有權仍是乙的"}, "answer": "D", "explanation": "【解析】選(D)。合夥人出資及合夥財產，依民法第668條為合夥人全體之公同共有。餐具與攤車既已作為合夥出資投入經營，已轉為合夥財產（公同共有），非各自單獨所有，故(D)錯誤。(A)個人之侵權行為非執行合夥事務；(B)合夥財產不足清償前，外部債權人得對合夥提起訴訟；(C)合夥解散後應進行清算。", "year": "114年"}, {"id": 15, "subject": "民法概要", "question": "依現行民法物權編有關不動產所有權相鄰關係規定之內容,下列之選項,何者正確?", "options": {"A": "土地所有人建築房屋故意逾越地界者,法院得斟酌公共利益後,能允許鄰地所有人請求移去或 變更", "B": "共有土地因分割,致其中一共有人所取得分得土地與公路無適宜之聯絡,無法為通常之使用, 應支付償金,取得通行他分割人所有地之權利", "C": "果實自落於鄰地,推定由鄰地所有人取得所有權", "D": "鄰地所有人因營造或修繕建築物之必要,得使用土地所有人之土地及其上建物內部閒置之空 間。但受有損害時,則得拒絕鄰地所有人之使用"}, "answer": "A", "explanation": "【解析】選(A)。依民法第796條之1規定，土地所有人建築房屋故意逾越地界者，不適用鄰地所有人不得請求移去變更之限制，法院仍得斟酌公共利益與當事人利益，准許鄰地所有人請求移去或變更，故(A)正確。(B)依民法第789條，因土地分割致不通公路者，通行他分割人之土地無須支付償金；(C)果實自落於鄰地，視為屬於鄰地所有人（民法第798條），為法定取得非僅推定；(D)因營造修繕得使用鄰地，不得拒絕，但造成損害得請求賠償償金。", "year": "114年"}, {"id": 16, "subject": "民法概要", "question": "甲、乙兩人共有 A 地,應有部分甲為 1/3、乙為 2/3。下列何者錯誤?", "options": {"A": "若甲、乙協議 20 年內不得分割,則在該期限內,不論發生任何事由,甲、乙均不得請求分割", "B": "甲得在未經乙的同意下,將其應有部分贈與及移轉給丁", "C": "若甲商請乙分割 A 地未果,甲可聲請法院分割 A 地,此時法院須優先考慮原物分配", "D": "A 地由丙無權占有使用,乙得在未經甲的同意下請求丙返還 A 地"}, "answer": "A", "explanation": "【解析】選(A)。依民法第823條第2項規定，共有人得協議不分割之期限不得逾5年（不動產有管理約定者最長30年），且縱有不分割協議，如有重大事由仍得隨時請求分割，故(A)稱「協議20年且不論發生任何事由均不得請求分割」顯屬錯誤。(B)應有部分為共有人自由處分之標的；(C)法院裁判分割原則上以原物分配為優先；(D)依民法第821條，共有人得為全體共有人利益向無權占有人請求返還共有物。", "year": "114年"}, {"id": 17, "subject": "民法概要", "question": "依我國民法關於地上權之規定,下列何者正確之論述?", "options": {"A": "地上權未定有存續期間者,逾越 30 年後,土地所有人始得向法院請求,定其後續之存續期間, 或終止該地上權", "B": "地上權人因不可抗力之事由導致妨礙其行使地上權使用時,得拒絕或減少地租之支付", "C": "地上權人積欠地租達 2 年總額時,除另有習慣外,土地所有人得逕行終止存續期限尚未屆至之地上權", "D": "已設定地上權之土地所有權人,於地上權存續期間讓與該土地所有權與第三人,已預收之地租 如已登記,地上權人得以該預付地租對抗受讓之第三人"}, "answer": "D", "explanation": "【解析】選(D)。依民法第836條之1規定，土地所有人於地上權存續中讓與所有權者，已登記之預收地租，地上權人得以之對抗受讓人，故(D)正確。(A)未定存續期間之地上權，成立滿20年後始得向法院聲請定期間或終止（非30年）；(B)依民法第835條之1，地上權人因不可抗力妨礙使用，不得請求免除或減少地租；(C)積欠地租達2年之總額，需先定相當期限催告而不支付，土地所有人始得終止地上權，不得「逕行」終止。", "year": "114年"}, {"id": 18, "subject": "民法概要", "question": "關於占有,下列何者錯誤?", "options": {"A": "占有於我國為事實,而非占有權", "B": "無權占有人亦有占有物返還請求權", "C": "占有與取得時效有關", "D": "惡意占有人,因保存占有物所支出之必要費用,不得請求償還"}, "answer": "D", "explanation": "【解析】選(D)。依民法第957條規定：「惡意占有人，因保存占有物所支出之必要費用，對於回復請求人，得依關於無因管理之規定，請求償還。」故惡意占有人對於「必要費用」仍得依無因管理規定請求償還，選項稱不得請求償還故(D)錯誤。(A)我國民法將占有規定為對物有事實上管領力之事實；(B)無權占有人受侵奪占有時亦享有占有物返還請求權（民法第962條）；(C)占有可依時效取得所有權或他物權。", "year": "114年"}, {"id": 19, "subject": "民法概要", "question": "甲所有的 A 地與乙所有的 B 地相鄰。下列何者正確?", "options": {"A": "A 地兩面環山、第三面環河,僅能經過 B 地通行於道路,則甲須經乙的同意,始得取得對 B 地 的通行權", "B": "A 地一面環山、一面環河、一面接著大馬路、一面緊鄰 B 地,甲聽信風水師的建議,將面臨大 馬路的那一面築起無門的高牆因此無法通行,則甲須經乙的同意,始得取得對 B 地的通行權", "C": "袋地通行權性質上並非供役地所有權本質上的限縮", "D": "若甲在 A 地上蓋房子,因為土地測量單位的疏失,該建築有 30 公分越界到 B 地,此時乙得知 此狀況,若沒有馬上阻止,則之後仍可請求甲拆屋還地"}, "answer": "B", "explanation": "【解析】選(B)。袋地通行權（民法第787條）係因土地與公路無適宜之聯絡而發生之法定通行權，但若土地所有人係自己任意築牆封閉通路（意圖製造袋地），不符法定袋地通行權之要件，不能強求鄰地忍受，需經鄰地所有人同意，故(B)正確。(A)法定袋地通行權係依法取得，無須鄰地所有人同意即可通行（但應擇損害最少之處所並支付償金）；(C)袋地通行權為相鄰關係，乃所有權內容擴張與限制；(D)土地測量疏失非故意越界，乙知其越界而不即時提出異議，喪失請求拆屋還地之權利（民法第796條）。", "year": "114年"}, {"id": 20, "subject": "民法概要", "question": "甲、乙結婚後未約定夫妻財產制時,下列有關甲、乙間之配偶財產關係之論述,何者錯誤?", "options": {"A": "甲所有之婚前購買之有價證券,於甲、乙婚後,甲取得該有價證券分配之股息或利息,於甲、 乙離婚時,乙得主張該分配之股息或利息,納入剩餘財產為分配計算之標的", "B": "甲於婚後以自己之財產清償乙所負之債務後,即使在婚姻關係中,仍得請求乙償還", "C": "甲、乙離婚時,對於婚後乙受贈之財產,如未經贈與人以書面聲明為乙之特有財產時,即應納 入乙之婚後財產,成為剩餘財產分配計算之標的", "D": "甲、乙離婚時,乙知悉剩餘財產分配計算之差額,僅得自法定財產關係消滅時起 2 年內,向甲 主張給付該差額之二分之一"}, "answer": "C", "explanation": "【解析】選(C)。依民法第1030條之1第1項第1款，因繼承或其他無償取得之財產（包括無償受贈之財產），於法定財產制消滅時「不列入剩餘財產分配計算」，無須贈與人特意以書面聲明為特有財產，故(C)錯誤。(A)婚前財產於婚姻中產生之孳息（股息、利息）視為婚後財產，列入剩餘財產；(B)夫或妻以自己財產代他方清償債務，婚姻中得請求償還；(D)剩餘財產分配請求權自請求權人知有剩餘差額時起，2年間不行使而消滅。", "year": "114年"}, {"id": 21, "subject": "民法概要", "question": "民法對於法定繼承人及其順序,於第 1138 條設有明文規定。下列相關之說明,何者正確?", "options": {"A": "被繼承人死亡時之配偶,於被繼承人死亡後 2 年內再婚者,喪失其原已取得之繼承權", "B": "被繼承人死亡時,其已出家之子女,無繼承之資格與地位", "C": "養子女與養父母之親生子女,雖因法律擬制而為旁系親屬,然因欠缺真實血緣關係,非屬民法 第 1138 條第 3 順位之法定繼承人", "D": "父再婚之後妻,與前妻之子女,僅為直系姻親關係,因此後妻對於前妻子女之死亡,無繼承其 遺產之權利"}, "answer": "D", "explanation": "【解析】選(D)。依民法第1138條法定繼承人包括配偶及直系血親卑親屬、父母、兄弟姊妹、祖父母四順序。繼母（後妻）與前妻之子女為直系姻親，非直系血親，彼此間無民法上之法定繼承權，故(D)正確。(A)繼承權於被繼承人死亡時確定取得，再婚不喪失已取得之繼承權；(B)出家不消滅身分上血親關係，仍有繼承權；(C)養子女自收養成立時取得與婚生子女相同之地位，互為旁系血親，屬於第3順位法定繼承人。", "year": "114年"}, {"id": 22, "subject": "民法概要", "question": "我國現行民法對於繼承制度,原則上採取概括繼承有限責任之規範型態。下列何者屬於正確之敘述?", "options": {"A": "概括繼承人如對於被繼承人生前享有權利或負擔義務,不因被繼承人之死亡而隨之消滅", "B": "第 1138 條所定第 1 順序之繼承人中有拋棄繼承權者,其應繼分應由其直系血親卑親屬代位繼承之", "C": "繼承人對於被繼承人所遺留之債務,對於被繼承人之債權人,負連帶清償之責任", "D": "拋棄繼承者,就自己所管理之遺產,於其他繼承人或遺產管理人開始管理前,應以善良管理人 之注意義務,繼續管理該遺產"}, "answer": "A", "explanation": "【解析】選(A)。依民法第1154條規定：「繼承人對於被繼承人之權利、義務，不因繼承而消滅。」此為混同之例外規範，符合限定責任體系，故(A)正確。(B)第一順序繼承人拋棄繼承者，其應繼分歸屬於其他同順序之繼承人，代位繼承僅限於「繼承開始前死亡或喪失繼承權」者，拋棄繼承不適用代位繼承；(C)繼承人僅以所得遺產為限負連帶責任；(D)拋棄繼承人管理遺產應以「與處理自己事務為同一之注意」管理，非善良管理人注意義務（民法第1176條之1）。", "year": "114年"}, {"id": 23, "subject": "民法概要", "question": "依我國民法有關遺囑之規定,下列敘述何者錯誤?", "options": {"A": "甲立遺囑,遺囑中將 A 地贈與好友乙。乙於甲之遺囑生效前意外死亡,其後甲重病身亡,乙之 繼承人丙得向甲之繼承人丁請求移轉交付 A 地所有權予自己", "B": "甲遺囑中遺贈予乙之 A 車,因丙之過失毀損,甲之遺囑生效時,推定對丙之權利成為遺贈之客 體,乙得向甲之繼承人丁請求移轉該權利予自己", "C": "甲以遺囑贈與 A 屋予好友乙,遺囑生效時,甲之繼承人丙寄存證信函請求乙 30 日內回函確認, 乙置之不理,期限屆滿時,該遺囑中之遺贈,仍然確定生效", "D": "甲以遺囑贈與 A 屋予好友乙,遺囑生效前,甲將 A 屋出賣予丙取得價金 1 千萬元之債權,甲請 求丙將該價金 1 千萬元直接捐贈予丁慈善基金會。甲之遺囑生效時,遺囑中 A 屋之遺贈應屬無效"}, "answer": "A", "explanation": "【解析】選(A)。依民法第1201條規定：「受遺贈人於遺囑發生效力前死亡者，其遺贈不生效力。」受遺贈人乙於甲死亡前已死亡，該遺贈歸於無效，A地仍屬甲之遺產，乙之繼承人丙不得代位或請求交付，故(A)錯誤。(B)民法第1203條，遺贈標的物有損害賠償請求權時，推定以該權利為遺贈標的；(C)民法第1207條，催告確答未回覆者視為承認遺贈；(D)民法第1202條，遺囑人生前處分遺贈物致物滅失，遺贈不生效力。", "year": "114年"}, {"id": 24, "subject": "民法概要", "question": "關於生前特種贈與的歸扣,下列何者錯誤?", "options": {"A": "生前特種贈與,包括因結婚、分居、營業所為之贈與", "B": "須有其他繼承人行使歸扣權,始須歸扣", "C": "一般認為,生前特種贈與之被繼承人有應繼分前付之意思", "D": "即使被繼承人於贈與時有反對意思表示,仍應歸扣"}, "answer": "D", "explanation": "【解析】選(D)。依民法第1173條第1項但書：「但被繼承人於贈與時有反對之意思表示者，不在此限。」若被繼承人明示免除歸扣，即不得強制歸扣，選項稱即使有反對意思表示仍應歸扣故(D)錯誤。(A)生前特種贈與限於因結婚、分居、營業之贈與；(B)歸扣為繼承人間算定應繼分之權利，需主張計算；(C)法理上特種贈與視為應繼分之前付。", "year": "114年"}, {"id": 25, "subject": "民法概要", "question": "甲夫乙妻,一起到夏威夷旅遊,租車亂跑,不幸墜入山谷。下列何者錯誤?", "options": {"A": "甲、乙被發現時,由屍體的腐壞程度可以斷定甲比乙早 10 小時死亡,則乙為甲的繼承人", "B": "甲、乙被發現時,即使經過法醫相驗,也無法確定誰先死,則雙方互為繼承人", "C": "3 年前,甲的家人為了擔心乙分家產,要求甲把全部的財產贈與給甲母,才允許雙方登記結婚 此次事故甲死乙傷,乙無法對甲母主張詐害債權的撤銷", "D": "該事故實則是乙為了取得甲大筆的遺產所製造的車禍,若甲死乙傷,乙將喪失對甲的繼承權"}, "answer": "B", "explanation": "【解析】選(B)。依民法第11條規定：「二人以上同時遇難，不能證明其死亡之先後時，推定其為同時死亡。」推定同時死亡之人間，因互不具備繼承開始時「生存」之要件，故彼此互不發生繼承關係，選項稱「互為繼承人」故(B)錯誤。(A)能證明甲先死乙後死者，乙已先繼承甲之遺產；(C)結婚前之贈與，當時配偶身分尚未發生，非侵害婚姻存續中之權益；(D)依民法第1145條第1款，故意致被繼承人於死因而受刑之宣告者，喪失其繼承權。", "year": "114年"}], "土地法與土地相關稅法概要": [{"id": 1, "subject": "土地法與土地相關稅法概要", "question": "因土地登記有錯誤致人民受有損害,地政機關負損害賠償後,於登記人員未盡下列那一種注意義 務時,得對登記人員行使求償權?", "options": {"A": "抽象輕過失責任", "B": "重大過失責任", "C": "具體輕過失責任", "D": "通常事變責任"}, "answer": "B", "explanation": "【解析】選(B)。依土地法第68條第2項規定：「因登記錯誤、遺漏或虛偽致受損害，由地政機關負損害賠償責任。但該地政機關證明其原因應歸責於受害人者，不在此限。地政機關所負之損害賠償，於登記人員有重大過失時，對之有求償權。」故登記人員需有「重大過失」地政機關始得行使求償權。", "year": "114年"}, {"id": 2, "subject": "土地法與土地相關稅法概要", "question": "甲為 A 地之登記名義人,與乙成立附條件的 A 地贈與契約,則甲與乙可以對 A 地申請做下列那 一種土地登記?", "options": {"A": "假處分登記", "B": "第一次登記", "C": "註記登記", "D": "預告登記"}, "answer": "D", "explanation": "【解析】選(D)。依土地法第79條之1第1項第3款，為保全附條件或期限之請求權，得聲請為「預告登記」。甲與乙成立附條件之贈與契約，受贈人乙為保全將來所有權移轉請求權，得申請預告登記以限制所有權人處分土地。", "year": "114年"}, {"id": 3, "subject": "土地法與土地相關稅法概要", "question": "辦理土地徵收時,徵收事業經行政院核定為重大建設,徵收範圍內之特定農業區農牧用地,如土 地所有權人對於土地列入徵收範圍有爭議,經說明後仍有異議,則中央目的事業主管機關應辦理 那一項民眾參與方式?", "options": {"A": "聽證", "B": "說明會", "C": "公聽會", "D": "陳述意見"}, "answer": "A", "explanation": "【解析】選(A)。依土地徵收條例第10條第3項規定，徵收範圍內之特定農業區農牧用地，經行政院核定為重大建設，需用土地人辦理公聽會後，如土地所有權人仍有異議，中央目的事業主管機關應辦理「聽證」，以強化正當法律程序。", "year": "114年"}, {"id": 4, "subject": "土地法與土地相關稅法概要", "question": "依土地稅法之規定,一般地價稅的基本稅率為多少?", "options": {"A": "百分之十", "B": "百分之五", "C": "千分之十", "D": "千分之十五"}, "answer": "C", "explanation": "【解析】選(C)。依土地稅法第16條規定，地價稅基本稅率為千分之十（10‰）。地價總額未超過累進起點地價者按基本稅率徵收，超過累進起點地價者依級距累進課徵。", "year": "114年"}, {"id": 5, "subject": "土地法與土地相關稅法概要", "question": "下列關於房屋稅納稅義務人的認定,何者錯誤?", "options": {"A": "以土地設定地上權之使用權房屋,為該使用權人", "B": "共有房屋向共有人徵收,並由共有人推定一人繳納", "C": "未辦建物所有權第一次登記且所有人不明者,優先向建造執照所載起造人徵收", "D": "房屋為信託財產,在信託關係存續中,為受託人"}, "answer": "C", "explanation": "【解析】選(C)。依房屋稅條例第4條第3項規定，設有典權之房屋，房屋稅納稅義務人為「典權人」而非出典人（典權人為使用收益房屋之權利人），故(C)錯誤。(A)房屋所有人為原則納稅人；(B)未辦建物所有權登記且無使照者，以現住人或使用人為納稅人；(D)信託關係存續中受託人為納稅人。", "year": "114年"}, {"id": 6, "subject": "土地法與土地相關稅法概要", "question": "土地所有權移轉時,原則上權利人及義務人雙方應於訂定契約幾日內檢附契約影本及相關文件共 同向主管稽徵機關申報土地移轉現值?", "options": {"A": "15 日", "B": "30 日", "C": "45 日", "D": "60 日"}, "answer": "B", "explanation": "【解析】選(B)。依土地稅法第49條第1項規定：「土地所有權移轉或設定典權時，權利人及義務人應於訂定契約之日起三十日內，檢附契約影本及有關文件，共同向主管稽徵機關申報其土地移轉現值。」故期限為30日。", "year": "114年"}, {"id": 7, "subject": "土地法與土地相關稅法概要", "question": "依土地法規定,所有權人欲以共有土地設定地上權,在不計共有人人數比例的情況下,至少應得 到該共有土地應有部分多少比例之同意?", "options": {"A": "超過四分之三", "B": "超過二分之一", "C": "超過三分之二", "D": "全體"}, "answer": "C", "explanation": "【解析】選(C)。依土地法第34條之1第1項規定：「共有土地或建築改良物，其處分、變更及設定地上權、農育權、不動產役權或典權，應以共有人過半數及其應有部分合計過半數之同意行之。但其應有部分合計逾三分之二者，其人數不予計算。」故不計人數時應有部分須超過三分之二。", "year": "114年"}, {"id": 8, "subject": "土地法與土地相關稅法概要", "question": "下列有關公有土地撥用之敘述,何者錯誤?", "options": {"A": "無論國有或地方有之土地均有撥用的可能", "B": "公有土地撥用需經財政部國有財產署核准", "C": "各級政府機關有使用公有土地之需求均得申請撥用公有土地", "D": "公有土地之撥用以無償為原則"}, "answer": "B", "explanation": "【解析】選(B)。依土地法第26條規定，公有土地之撥用，應由該管直轄市或縣（市）政府審查後呈請「行政院」核准，而非由國有財產署核准，故(B)錯誤。(A)國有或直轄市、縣市、鄉鎮市有均得撥用；(C)各級政府機關因公用需要均得申請；(D)公有土地之撥用以無償為原則。", "year": "114年"}, {"id": 9, "subject": "土地法與土地相關稅法概要", "question": "區段徵收地區如為經實施農地重劃者,此一地區抵價地總面積比例不得少於徵收總面積多少?", "options": {"A": "百分之四十", "B": "百分之四十五", "C": "百分之五十", "D": "百分之五十五"}, "answer": "B", "explanation": "【解析】選(B)。依土地徵收條例第39條第2項但書規定，區段徵收抵價地總面積以徵收總面積百分之五十為原則，最低不得少於百分之四十。但經實施農地重劃之地區，抵價地總面積比例不得少於徵收總面積「百分之四十五」，故選(B)。", "year": "114年"}, {"id": 10, "subject": "土地法與土地相關稅法概要", "question": "土地法第 78 條第 8 款所稱限制登記,謂限制登記名義人處分其土地權利所為之登記,下列何者 非屬之?", "options": {"A": "更正登記", "B": "假處分", "C": "破產登記", "D": "預告登記"}, "answer": "A", "explanation": "【解析】選(A)。土地法第78條第8款及土地登記規則第136條之「限制登記」，包括預告登記、查封、假扣押、假處分、破產登記等限制處分權之登記。而「更正登記」係因登記錯誤或遺漏所為之補正登記，不屬於限制登記，故選(A)。", "year": "114年"}, {"id": 11, "subject": "土地法與土地相關稅法概要", "question": "依土地法規定,有關私有土地所有權取得之限制,土地若已成為私有者,政府得依法以何種方式 處置?", "options": {"A": "公開標售", "B": "照價收買", "C": "徵收", "D": "沒收"}, "answer": "C", "explanation": "【解析】選(C)。依土地法第14條規定，天然水道、海岸、礦泉地等不得為私有，其已成為私有者「得依法徵收之」。故選(C)。", "year": "114年"}, {"id": 12, "subject": "土地法與土地相關稅法概要", "question": "對於土地權利之規定,我國係採「物權法定主義」,土地所有權以外之其他不動產物權,謂之他項 權利,下列何者屬之?", "options": {"A": "耕作權", "B": "通行權", "C": "日照權", "D": "畜牧權"}, "answer": "A", "explanation": "【解析】選(A)。我國物權採法定主義，民法物權編與土地法規定之不動產物權包括地上權、農育權、不動產役權、抵押權、典權，以及特別法上之「耕作權」（土地法第133條），通行權與日照權僅為所有權擴張限制之相鄰關係債權或法定義務，非獨立物權，故選(A)。", "year": "114年"}, {"id": 13, "subject": "土地法與土地相關稅法概要", "question": "依土地法規定,有關優先購買權之敘述,下列何者正確?", "options": {"A": "基地出賣或房屋出賣時,優先購買權人,於接到出賣通知後 15 日內不表示者,其優先購買權視 為放棄", "B": "耕地租用出租人出賣或出典耕地時,優先購買權人,於接到出賣通知後 15 日內不表示者,其優 先購買權視為放棄", "C": "共有土地共有人出賣其應有部分時,優先購買權人,於接到出賣通知後 15 日內不表示者,其優 先購買權視為放棄", "D": "區分所有建物之專有部分連同其基地應有部分之所有權一併移轉與同一人者,他共有人有優先 購買權之適用"}, "answer": "C", "explanation": "【解析】選(C)。依土地法第34條之1第4項規定，共有人出賣其應有部分時，他共有人得以同一價格共同或單獨優先承購。徵求他共有人是否優先購買之通知，於接到通知後「15日內」不表示者視為放棄，故(C)正確。(A)土地法第104條基地或房屋出賣之優買期限為接到出賣通知後10日內；(B)土地法第107條耕地租用優買通知期限亦為10日；(D)專有部分與基地併同移轉不適用他共有人優先購買權。", "year": "114年"}, {"id": 14, "subject": "土地法與土地相關稅法概要", "question": "在不動產贈與的情形下,有關契稅稅率,下列何者為是?", "options": {"A": "百分之四", "B": "百分之六", "C": "百分之二", "D": "百分之五"}, "answer": "B", "explanation": "【解析】選(B)。依契稅條例第3條及第7條規定，贈與契稅之稅率為「百分之六」。契稅稅率：買賣6%、典權4%、交換2%、贈與6%、分割2%、占有6%。", "year": "114年"}, {"id": 15, "subject": "土地法與土地相關稅法概要", "question": "依房屋稅條例規定,對於私有房屋免徵房屋稅,下列何者正確?", "options": {"A": "無償供政府機關公用或供軍用之房屋", "B": "政府平價配售之平民住宅", "C": "合法登記之工廠供直接生產使用之自有房屋", "D": "受重大災害,毀損面積占整棟面積三成以上不及五成之房屋"}, "answer": "A", "explanation": "【解析】選(A)。依房屋稅條例第15條第1項第4款規定，私有房屋「無償供政府機關公用或供軍用者」免徵房屋稅，故(A)正確。(B)政府平價配售之平民住宅僅減半徵收；(C)工廠供生產使用之自有房屋減半徵收；(D)受重大災害毀損面積三成以上不及五成者為減半徵收，毀損五成以上始免徵。", "year": "114年"}, {"id": 16, "subject": "土地法與土地相關稅法概要", "question": "依契稅條例規定,有關納稅義務人繳納契稅期限及罰則之規定,下列敘述何者正確?", "options": {"A": "納稅義務人應於稽徵機關核定繳款書送達後 30 日內繳納", "B": "納稅義務人不依規定期限申報者,每逾 2 日,加徵應納稅額百分之二之怠報金", "C": "納稅義務人不依規定期限繳納稅款者,每逾 3 日,加徵應納稅額百分之二之滯納金", "D": "納稅義務人應納契稅,匿報或短報,經主管稽徵機關查得,或經人舉發查明屬實者,除應補繳 稅額外,並加處以應納稅額一倍以上二倍以下之罰鍰"}, "answer": "A", "explanation": "【解析】選(A)。依契稅條例第16條第1項規定：「納稅義務人應於主管稽徵機關核定繳款書送達後三十日內繳納。」故(A)正確。(B)不依期限申報者每逾3日加徵1%（非每逾2日加2%）；(C)不依期限繳納者每逾3日加徵1%滯納金；(D)匿報短報處應納稅額一倍以上三倍以下罰鍰（非二倍）。", "year": "114年"}, {"id": 17, "subject": "土地法與土地相關稅法概要", "question": "依土地稅法規定,納稅義務人藉變更、隱匿地目等則或於適用特別稅率、減免地價稅或田賦之原 因、事實消滅時,未向主管稽徵機關申報者,應依規定辦理,下列敘述何者正確?", "options": {"A": "規避繳納實物者,除追補應納部分外,處應繳田賦實物額二倍之罰鍰", "B": "土地買賣未辦竣權利移轉登記,再行出售者,處再行出售移轉現值百分之三以下之罰鍰", "C": "逃稅或減輕稅賦者,除追補應納部分外,處短匿稅額或賦額三倍以下之罰鍰", "D": "應追補之稅額或賦額、隨賦徵購實物及罰鍰,納稅義務人應於通知繳納之日起 2 個月內繳納之"}, "answer": "C", "explanation": "【解析】選(C)。依土地稅法第54條第1項第1款規定，納稅義務人藉變更隱匿地目等則或減免原因事實消滅未申報而逃稅或減輕稅賦者，除追補應納部分外，處「短匿稅額或賦額三倍以下之罰鍰」，故(C)正確。", "year": "114年"}, {"id": 18, "subject": "土地法與土地相關稅法概要", "question": "依都市計畫法規定,有關都市計畫之內容與實施,下列敘述何者正確?", "options": {"A": "主要計畫其實施進度以 5 年為一期,最長不得超過 25 年", "B": "細部計畫圖,其比例尺不得小於一千五百分之一", "C": "主要計畫圖,其比例尺不得小於一萬五千分之一", "D": "主要計畫經核定或備案後,當地直轄市、縣(市)政府應於接到核定或備案公文之日起 20 日 內,將主要計畫書及主要計畫圖發布實施"}, "answer": "A", "explanation": "【解析】選(A)。依都市計畫法第15條第2項規定，主要計畫之實施進度以「五年為一期，最長不得超過二十五年」，故(A)正確。(B)細部計畫圖比例尺不得小於一千二百分之一；(C)主要計畫圖比例尺不得小於三千分之一；(D)接到核定公文後應於30日內發布實施（非20日）。", "year": "114年"}, {"id": 19, "subject": "土地法與土地相關稅法概要", "question": "依國土計畫法規定,關於中央主管機關應辦理之事項,下列敘述何者正確?", "options": {"A": "國土功能分區之劃設", "B": "國土保育地區或海洋資源地區之使用許可、許可變更及廢止之核定", "C": "農業發展地區及城鄉發展地區之使用許可、許可變更及廢止之核定", "D": "直轄市、縣(市)國土計畫之擬訂、公告、變更及執行"}, "answer": "B", "explanation": "【解析】選(B)。依國土計畫法規定，國土保育地區或海洋資源地區涉及重大國土環境保育，其使用許可由中央主管機關（內政部）審議核定；而國土功能分區圖之劃設及城鄉發展地區之使用許可則主要由直轄市、縣（市）主管機關辦理，故(B)正確。", "year": "114年"}, {"id": 20, "subject": "土地法與土地相關稅法概要", "question": "有關自辦土地重劃,依相關法規之規定,下列敘述何者正確?", "options": {"A": "重劃會組織、職權、重劃業務、獎勵措施等事項之辦法,由地方主管機關定之", "B": "重劃會辦理市地重劃時,應由重劃區內私有土地所有權人半數以上,而其所有土地面積超過重 劃區私有土地總面積半數以上者之同意,並經主管機關核准後實施之", "C": "自辦農地重劃,應經重劃區內私有土地所有權人半數以上,而其所有面積亦達私有土地面積半 數以上者之同意,就重劃區全部土地辦理重劃,並經該管直轄市或縣(市)主管機關核准", "D": "重劃會辦理農村社區土地重劃時,應經重劃區內私有土地所有權人合計超過三分之二,且其所 有面積合計超過私有土地面積三分之二者之同意,就重劃區全部土地辦理重劃,並經該管直轄 市或縣(市)主管機關核准後實施"}, "answer": "B", "explanation": "【解析】選(B)。依平均地權條例第58條第3項規定，重劃會辦理市地重劃時，應由重劃區內私有土地所有權人半數以上，而其所有土地面積超過重劃區私有土地總面積半數以上者之同意，並經主管機關核准後實施之，故(B)正確。", "year": "114年"}, {"id": 21, "subject": "土地法與土地相關稅法概要", "question": "依土地法規定,下列何種土地非屬於不得移轉、設定負擔或租賃於外國人之土地?", "options": {"A": "林地", "B": "鹽地", "C": "農地", "D": "水源地"}, "answer": "C", "explanation": "【解析】選(C)。依土地法第17條規定，林地、漁地、狩獵地、鹽地、礦地、水源地、要塞軍備區域及領域邊境之土地，不得移轉、設定負擔或租賃於外國人。農地（農牧用地）不在第17條絕對禁止限制之列（外國人得依法取得供自用自營農作業），故選(C)。", "year": "114年"}, {"id": 22, "subject": "土地法與土地相關稅法概要", "question": "下列何者並非土地法中的農作改良物?", "options": {"A": "置於農地上的盆栽", "B": "附著於農地上的芒果樹", "C": "農田的灌溉設施", "D": "農地上所施加的肥料"}, "answer": "A", "explanation": "【解析】選(A)。土地法第10條及土地改良物相關定義中，農作改良物指附著於農地之果樹、茶樹、竹木等農作物及其改良土壤、施加之肥料與水利設施。置於農地上隨時可移動之「盆栽」，屬獨立動產，並非土地法上之農作改良物，故選(A)。", "year": "114年"}, {"id": 23, "subject": "土地法與土地相關稅法概要", "question": "依土地徵收條例規定,有關得為區段徵收之情形,下列何項非屬之?", "options": {"A": "舊都市地區為公共安全、衛生、交通之需要或促進土地之合理使用實施更新者", "B": "非都市土地實施開發建設者", "C": "興辦國營事業或公安事業者", "D": "農村社區為加強公共設施、改善公共衛生之需要或配合農業發展之規劃實施更新者"}, "answer": "C", "explanation": "【解析】選(C)。依土地徵收條例第4條第1項，得為區段徵收之情形包括：新設都市建設、舊都市地區實施更新、都市土地之農業區或保護區變更為建築用地、農村社區更新、非都市土地開發等。興辦國營事業或國防公安事業，係依一般徵收（第3條）辦理，非得逕為區段徵收之法定事由，故選(C)。", "year": "114年"}, {"id": 24, "subject": "土地法與土地相關稅法概要", "question": "依土地稅法規定,土地所有權人申請自用住宅用地,其地價稅按千分之二計徵,下列敘述何者正 確?", "options": {"A": "都市土地面積未超過五公畝部分", "B": "非都市土地面積未超過十公畝部分", "C": "國民住宅及企業或公營事業興建之勞工宿舍,自動工興建或取得土地所有權之日起,其用地之 地價稅", "D": "土地所有權人與其配偶及未成年之受扶養親屬,適用自用住宅用地稅率繳納地價稅者,以一次 為限"}, "answer": "C", "explanation": "【解析】選(C)。依土地稅法第9條之1規定，國民住宅及企業或公營事業興建之勞工宿舍，自動工興建或取得土地所有權之日起，其用地之地價稅適用自用住宅優惠稅率（千分之二），故(C)正確。(A)都市土地面積限制為未超過三公畝（非五公畝）；(B)非都市土地未超過七公畝（非十公畝）；(D)地價稅自用住宅用地無「一生一次」限制（一生一次係土地增值稅之規定）。", "year": "114年"}, {"id": 25, "subject": "土地法與土地相關稅法概要", "question": "政府為解決因經費問題無法於短期內徵收公共設施保留地,以至於影響土地所有權人之權益,於 是採取若干措施,依相關法規之規定,下列敘述何者正確?", "options": {"A": "都市計畫公共設施保留地,在保留期間仍為建築使用者,除自用住宅用地依平均地權條例第 20 條 之規定外,統按千分之十計徵地價稅", "B": "公共設施保留地未作任何使用並與使用中之土地隔離者,免徵地價稅", "C": "依都市計畫法指定之公共設施保留地尚未被徵收前之移轉,減半徵收土地增值稅", "D": "公共設施保留地因繼承或因配偶、直系血親間之贈與而移轉者,減半徵收遺產稅或贈與稅"}, "answer": "B", "explanation": "【解析】選(B)。依土地稅法第19條及都市計畫法規定，公共設施保留地未作任何使用並與使用中之土地隔離者，免徵地價稅，故(B)正確。(A)在保留期間仍為建築使用者統按千分之六計徵；(C)尚未徵收前之移轉「免徵」土地增值稅（非減半）；(D)因繼承移轉者免徵遺產稅。", "year": "114年"}], "不動產經紀相關法規概要": [{"id": 1, "subject": "不動產經紀相關法規概要", "question": "公寓大廈頂樓平台漏水之原因,為年久失修導致防水層破損。此時應由誰負修繕義務?", "options": {"A": "依區分所有權人會議決議", "B": "公寓大廈管理委員會", "C": "頂樓住戶", "D": "頂樓住戶和管理委員會共同負責"}, "answer": "B", "explanation": "【解析】選(B)。依公寓大廈管理條例第10條第2項規定：「共用部分、約定共用部分之修繕、管理、維護，由管理負責人或管理委員會為之。其費用由公共基金支付或由區分所有權人按其共有之應有部分比例分擔之。」頂樓平台為共用部分，年久失修漏水應由管理委員會負責修繕，故選(B)。", "year": "114年"}, {"id": 2, "subject": "不動產經紀相關法規概要", "question": "舉行公寓大廈區分所有權人會議時,何種事項在會議中,不得以臨時動議提出?", "options": {"A": "管理委員選任之事項", "B": "公共區域禁止吸煙之事項", "C": "公共設施緊急維修之事項", "D": "調整收取社區管理費之事項"}, "answer": "A", "explanation": "【解析】選(A)。依公寓大廈管理條例第30條第2項規定，規約之訂定或變更、重大修繕或改良、停止共用部分之使用、管委會委員選任等重大事項，應在開會通知中載明，不得以「臨時動議」提出，故選(A)。", "year": "114年"}, {"id": 3, "subject": "不動產經紀相關法規概要", "question": "依公寓大廈管理條例,下列有關公寓大廈管理委員任期之敘述,何者正確?", "options": {"A": "管理委員之任期不可以規定在規約中,要召開區分所有權人會議決定", "B": "管理委員會會議得決議各管理委員任期為 1 年或 2 年", "C": "主任委員、財務管理委員及監察業務委員之任期屆滿,連選得連任一次", "D": "管理委員會的各管理委員之任期屆滿,連選得連任"}, "answer": "C", "explanation": "【解析】選(C)。依公寓大廈管理條例第29條第2項及第3項規定，管理委員之任期為一年至二年，連選得連任；但主任委員、財務管理委員及監察業務委員，連選得連任一次，故(C)正確。(A)委員任期應明定於規約中；(B)任期由規約規定，非管委會決議；(D)全體委員均得連選連任，僅三長連任受一次限制。", "year": "114年"}, {"id": 4, "subject": "不動產經紀相關法規概要", "question": "甲在公寓大廈 1 樓開店營業,向管理委員會表示想要於該大樓 1、2 樓外牆設置廣告物,甲要取 得何者之同意,才能設置廣告物?", "options": {"A": "管理委員會開會同意", "B": "管理委員會會議及區分所有權人會議決議同意", "C": "2 樓區分所有權人同意", "D": "區分所有權人會議決議同意及 1 樓、2 樓區分所有權人同意"}, "answer": "D", "explanation": "【解析】選(D)。依公寓大廈管理條例第8條第1項，公寓大廈周圍上下、外牆面、樓頂平台及不屬專有部分之防空避難設備，其變更構造、顏色、設置廣告物、鐵鋁窗等，除應符合法令規定外，並應受規約或區分所有權人會議決議之限制。故甲應依規約或向區分所有權人會議提出並取得決議同意，故選(D)。", "year": "114年"}, {"id": 5, "subject": "不動產經紀相關法規概要", "question": "依消費者保護法之規定,企業經營者對消費者保證商品或服務之品質時,應主動出具書面保證書。 該保證書應載明之事項中,不包括那一項?", "options": {"A": "商品或服務之名稱、種類、數量,其有製造號碼或批號者,其製造號碼或批號", "B": "保證期間及其起算方法", "C": "由經銷商售出者,經銷商之名稱、地址", "D": "各期價款與其他附加費用合計之總價款與現金交易價格之差額"}, "answer": "D", "explanation": "【解析】選(D)。依消費者保護法第22條及第23條規定，企業經營者對消費者保證商品或服務之品質者，應出具書面保證書；但以廣告保證者，廣告內容即構成契約之一部，企業經營者不得藉口未給保證書而免除保證責任，故(D)正確。", "year": "114年"}, {"id": 6, "subject": "不動產經紀相關法規概要", "question": "訪問交易之消費者,關於行使解除契約之敘述,下列何者為正確?", "options": {"A": "消費者行使解除權,唯有直接退回商品給企業經營者之方式", "B": "經企業經營者同意,可以用口頭通知企業經營者的方式來解除契約", "C": "消費者解除買賣契約,無須說明理由且無庸負擔任何費用或價款", "D": "消費者行使解除權的 7 天猶豫期,可以以特約排除猶豫期間"}, "answer": "C", "explanation": "【解析】選(C)。依消費者保護法第19條第1項規定，通訊交易或訪問交易之消費者，得於收受商品或接受服務後七日內，以書面或通知方式解除契約，無須說明理由及負擔任何費用或對價，故(C)正確。", "year": "114年"}, {"id": 7, "subject": "不動產經紀相關法規概要", "question": "甲建商所銷售預售屋的車位位置、規格,不符合預售屋買賣定型化契約應記載及不得記載事項時, 地方政府主管機關應優先適用何種法律,裁處罰鍰?", "options": {"A": "公平交易法", "B": "平均地權條例", "C": "消費者保護法", "D": "不動產經紀業管理條例"}, "answer": "B", "explanation": "【解析】選(B)。依消費者保護法第17條規定，定型化契約應記載及不得記載事項具有強行法效力。建商契約條款違反公告之應記載不得記載事項者，該條款無效，且主管機關得令其限期改正，屆期不改正者得處以罰鍰，故選(B)。", "year": "114年"}, {"id": 8, "subject": "不動產經紀相關法規概要", "question": "公平交易法有關事業間聯合行為之敘述,下列何者錯誤?", "options": {"A": "行為主體須為二以上彼此具競爭關係之同一產銷階段事業", "B": "事業間具有以契約、協議或其他方式之合意或相互約束事業活動之行為", "C": "效果須足以影響生產、商品交易或服務供需之市場功能", "D": "主管機關不得以相當依據推定事業間具有聯合行為之合意"}, "answer": "D", "explanation": "【解析】選(D)。依公平交易法第14條及第15條規定，事業不得為聯合行為；但有助於產業合理化、共同研發等有益整體經濟及公共利益之情形，且事先申請主管機關（公平會）許可者，得為例外許可之聯合行為，選項稱任何情況均不得許可故(D)錯誤。", "year": "114年"}, {"id": 9, "subject": "不動產經紀相關法規概要", "question": "下列何者不屬於公平交易法第 21 條不實廣告之行為態樣?", "options": {"A": "甲公司在網頁宣稱驗屋人員有專業證照,惟該等證照並非與執行驗屋業務相關的證照", "B": "乙建商在廣告文宣傳單上,對於使用分區為科技商務專用區之建案使用一般住宅用語", "C": "丙仲介人員在公司窗戶上貼單,刊載多筆房屋賀成交資訊,惟部分成交紀錄並非均為該公司 所成交", "D": "代銷業者刊登廣告招徠客人,對來購屋消費者表示須先給付定金始提供房屋買賣契約書攜回 審閱"}, "answer": "D", "explanation": "【解析】選(D)。公平交易法第21條規範之虛偽不實或引人錯誤之表示或表徵，係指事業於廣告或公眾周知之傳播媒介對商品或服務內容為不實陳述。一般商業談判中未公開之單純私下要約或詢價，不屬於第21條公開廣告範疇，故選(D)。", "year": "114年"}, {"id": 10, "subject": "不動產經紀相關法規概要", "question": "事業向公平交易委員會申請許可進口玉米之聯合行為,經該會附加負擔後予以許可,並在期限屆 滿前,再向主管機關申請期限延展。下列敘述何者錯誤?", "options": {"A": "主管機關對許可及其有關之條件、負擔、期限,不得主動公開", "B": "事業向主管機關申請其延展期限,每次不得逾 5 年", "C": "主管機關對申請展延所為之許可,得附加條件或負擔", "D": "事業如有正當理由,得於期限屆滿前 3 個月至 6 個月期間內申請"}, "answer": "A", "explanation": "【解析】選(A)。依公平交易法第15條第2項規定，公平會為聯合行為之許可，得附加條件、負擔或限制，以確保公益與市場公平競爭。事業若未履行所附負擔，公平會得廢止許可或處以罰鍰，故(A)正確。", "year": "114年"}, {"id": 11, "subject": "不動產經紀相關法規概要", "question": "有關不動產說明書應記載及不得記載事項之擬定與公告,下列敘述何者正確?", "options": {"A": "由內政部擬定相關規範,並向行政院報請核定公告", "B": "由消費者保護處擬定相關規範,並向行政院報請核定公告", "C": "由法務部擬定相關規範,並向司法院報請核定公告", "D": "由仲介業全聯會擬定相關規範,並向司法院報請核定公告"}, "answer": "A", "explanation": "【解析】選(A)。依不動產經紀業管理條例第22條規定，不動產說明書應記載及不得記載事項，由「中央主管機關（內政部）」定之，故(A)正確。", "year": "114年"}, {"id": 12, "subject": "不動產經紀相關法規概要", "question": "甲不動產仲介經紀有限公司,A 營業處所之經紀人離職缺人,因而僱用剛考取不動產經紀人考試 及格者丁,承辦仲介業務並於委託銷售契約書上簽章。下列甲違反不動產經紀業管理條例規定之 敘述,何者錯誤?", "options": {"A": "甲違反經紀業設立之營業處所至少應置經紀人一人", "B": "甲違反不動產之委託契約書應由經紀業指派經紀人簽章", "C": "甲違反不得僱用未具備經紀人員資格者從事仲介業務", "D": "甲違反規定受停止執行業務處分累計達 3 次以上者,廢止其經營許可"}, "answer": "D", "explanation": "【解析】選(D)。依不動產經紀業管理條例第11條規定，經紀業分設之營業處所，應至少置經紀人一人。經紀人離職致不足員額時，經紀業應於「三個月內」補足，故選(D)。", "year": "114年"}, {"id": 13, "subject": "不動產經紀相關法規概要", "question": "依據不動產經紀業管理條例,關於經營仲介業務者之規定,下列敘述何者正確?", "options": {"A": "向主管機關申請許可,經審查後即得經營仲介業務", "B": "以商號之型態辦理登記後,即得開始經營仲介業務", "C": "所僱用的經紀人員可以用個人名義執行不動產買賣", "D": "經營國外不動產仲介業務,應以公司型態辦理登記"}, "answer": "D", "explanation": "【解析】選(D)。依不動產經紀業管理條例第19條規定，經紀業或經紀人員不得收取差價或其他報酬，其向買賣雙方收取服務報酬之總額，不得超過中央主管機關規定之標準（內政部規定買賣總額最高不得超過成交價6%），故(D)正確。", "year": "114年"}, {"id": 14, "subject": "不動產經紀相關法規概要", "question": "甲剛搬來社區不久,即受到鄰居推薦,並順利當選社區管理委員會之委員。依公寓大廈管理條例 之規定,該管理委員會有那一種能力?", "options": {"A": "權利能力", "B": "行為能力", "C": "意思能力", "D": "當事人能力"}, "answer": "D", "explanation": "【解析】選(D)。依公寓大廈管理條例第29條規定，管理委員之選任及資格，應依規約規定。若規約未禁止新住戶或受推薦人參選，其當選即合法有效，並得本於職權執行職務，故(D)符合規範。", "year": "114年"}, {"id": 15, "subject": "不動產經紀相關法規概要", "question": "依公寓大廈管理條例之規定,關於共用部分之敘述,何者錯誤?", "options": {"A": "各區分所有權人對建築物之共用部分及其基地有使用收益之權利,按其共有之應有部分比例, 不得另行約定之", "B": "住戶對共用部分之使用方法,可以另外約定調整之", "C": "共用部分及其相關設施之拆除、重大修繕或改良,應依區分所有權人會議之決議為之", "D": "專有部分不得與其所屬建築物共用部分之應有部分及其基地所有權或地上權之應有部分分離 而為移轉或設定負擔"}, "answer": "A", "explanation": "【解析】選(A)。依公寓大廈管理條例第7條規定，公寓大廈共用部分不得獨立為區分所有之客體，且不得與其專有部分分離而為移轉或設定負擔；選項稱「得與專有部分分離單獨移轉」顯屬錯誤，故選(A)。", "year": "114年"}, {"id": 16, "subject": "不動產經紀相關法規概要", "question": "甲買了一個社區的房子,剛好到了要召開區分所有權人會議的時間。依公寓大廈管理條例之規定, 區分所有權人會議至少多久應召開定期會議一次?", "options": {"A": "每 3 個月", "B": "每季", "C": "每半年", "D": "每年"}, "answer": "D", "explanation": "【解析】選(D)。依公寓大廈管理條例第30條第1項規定，區分所有權人會議應由召集人於開會前十日（有急迫情事時依規約得縮短）以書面載明開會內容通知各區分所有權人，故選(D)。", "year": "114年"}, {"id": 17, "subject": "不動產經紀相關法規概要", "question": "區分所有權人會議之決議,依公寓大廈管理條例,除規約另有規定,應有區分所有權人(1)以上及 其區分所有權比例合計 (2)以上出席,以出席人數 (3)以上及其區分所有權比例占出席人數區分 所有權 (4)以上之同意行之。上述(1)(2)(3)(4)之比例,依序應為多少?", "options": {"A": "二分之一、二分之一、三分之二、三分之二", "B": "二分之一、三分之二、三分之二、四分之三", "C": "三分之二、三分之二、四分之三、四分之三", "D": "三分之二、四分之三、四分之三、五分之四"}, "answer": "C", "explanation": "【解析】選(C)。依公寓大廈管理條例第31條規定，區分所有權人會議之決議，除規約另有規定外，應有區分所有權人三分之二以上及其區分所有權比例合計三分之二以上出席，以出席人數四分之三以上及其區分所有權比例四分之三以上之同意行之，故選(C)。", "year": "114年"}, {"id": 18, "subject": "不動產經紀相關法規概要", "question": "依不動產經紀業管理條例之規定,經紀人員違反下列那一選項之規定,不僅應依規定懲戒,經紀 業亦將依規定處罰?", "options": {"A": "經紀人員未專任一經紀業,違法為他經紀業執行仲介或代銷業務", "B": "經紀人員收取差價或其他報酬", "C": "經紀人員在執行業務過程中,未以不動產說明書向與委託人交易之相對人解說", "D": "經紀人員無故洩漏因業務知悉或持有之他人秘密"}, "answer": "B", "explanation": "【解析】選(B)。依不動產經紀業管理條例第31條規定，經紀人員違反第19條第1項收取差價或逾額報酬之規定者，應受「六個月以上三年以下之停止執行業務處分」，情節重大者廢止證書，故選(B)。", "year": "114年"}, {"id": 19, "subject": "不動產經紀相關法規概要", "question": "依不動產經紀業管理條例之規定,下列關於不動產經紀營業員之敘述,何者正確?", "options": {"A": "不動產經紀人考試及格,並向中央主管機關指定之機構、團體登錄及領有不動產經紀營業員證 明者,得充任不動產經紀營業員", "B": "經紀營業員訓練不得少於 20 個小時,其證明有效期限為 4 年", "C": "期滿時,經紀營業員應檢附完成訓練 30 個小時以上之證明文件,向中央主管機關指定之機構、 團體重新辦理登錄", "D": "經紀營業員經驗之認定,得以本條例施行後,已實際從事仲介或代銷業務之所得扣繳資料證明"}, "answer": "A", "explanation": "【解析】選(A)。依不動產經紀業管理條例第14條第3項及經紀營業員相關規定，經紀營業員經專業訓練三十小時以上合格，並向中央主管機關指定之機構、團體登錄並領得營業員證明後，始得充任；營業員證明有效期限為四年，故(A)正確。", "year": "114年"}, {"id": 20, "subject": "不動產經紀相關法規概要", "question": "依不動產經紀業管理條例之規定,經紀業應完成相關程序後方得營業。下列敘述,何者錯誤?", "options": {"A": "經紀業經主管機關之許可,並辦妥公司登記或商業登記", "B": "加入戶籍所在地之同業公會", "C": "依中央主管機關規定繳存營業保證金", "D": "應於 6 個月內開始營業;逾期未開始營業者,由主管機關廢止其許可"}, "answer": "B", "explanation": "【解析】選(B)。依不動產經紀業管理條例第7條規定，經紀業經主管機關許可後，應於六個月內辦妥公司或商業登記，並加入所在地同業公會，並繳存營業保證金後，始得營業，故程序為「許可→登記→繳保證金→加入公會→開始營業」，(B)順序與規範正確。", "year": "114年"}, {"id": 21, "subject": "不動產經紀相關法規概要", "question": "依公平交易法之規定,法院因事業違反該法之規定,致侵害他人權益者,被害人之請求,如為事 業之故意行為,得依侵害情節,酌定損害額以上之賠償。但不得超過已證明損害額之幾倍?", "options": {"A": "二倍", "B": "三倍", "C": "五倍", "D": "十倍"}, "answer": "B", "explanation": "【解析】選(B)。依公平交易法第31條規定，事業違反公平交易法之規定，致侵害他人權益者，法院因被害人之請求，如為事業之故意行為，得依侵害情節，酌定損害額「三倍以下」之懲罰性損害賠償，故選(B)。", "year": "114年"}, {"id": 22, "subject": "不動產經紀相關法規概要", "question": "依不動產經紀業管理條例之規定,下列那一項關於簽章之敘述錯誤?", "options": {"A": "經紀人員在執行業務過程中,不動產說明書於提供解說前,應經委託人簽章", "B": "雙方當事人簽訂租賃或買賣契約書時,經紀人應將不動產說明書交付與委託人交易之相對人, 並由相對人在不動產說明書上簽章", "C": "委由經紀業仲介或代銷者,不動產租賃、買賣契約書文件應由經紀業指派經紀人簽章", "D": "經營經紀業者,向主管機關申請許可之應備文件應由經紀業指派經紀人簽章"}, "answer": "D", "explanation": "【解析】選(D)。依不動產經紀業管理條例第22條第1項，不動產經紀業指派經紀人簽章之文件包括：不動產出租出售委託契約書、承租承購要約書、定金收據、不動產廣告稿、不動產說明書、不動產租賃或買賣契約書。申請營業許可之公文為行政申請書件，非經紀人業務簽章文件，故(D)錯誤。", "year": "114年"}, {"id": 23, "subject": "不動產經紀相關法規概要", "question": "不動產之買賣、互易、租賃或代理銷售,如委由經紀業仲介或代銷者,依不動產經紀業管理條例 之規定,相關文件應由經紀業指派經紀人簽章。下列何者於經營代銷業務者不適用之?", "options": {"A": "不動產出租、出售委託契約書", "B": "定金收據", "C": "不動產廣告稿", "D": "不動產說明書"}, "answer": "A", "explanation": "【解析】選(A)。依不動產經紀業管理條例第22條第1項但書，於經營「代銷業務」者，不適用第1款「不動產出租、出售委託契約書」（代銷業務係受建商委託代理銷售，其簽訂者為代理銷售委託契約書，非仲介業之出租出售委託書），故選(A)。", "year": "114年"}, {"id": 24, "subject": "不動產經紀相關法規概要", "question": "依公平交易法之規定,下列那一個定義之內容錯誤?", "options": {"A": "廣告薦證者,指廣告主於廣告中反映其對商品或服務之意見、信賴、發現或親身體驗結果", "B": "獨占,指事業在相關市場處於無競爭狀態,或具有壓倒性地位,可排除競爭之能力者", "C": "競爭,指二以上事業在市場上以較有利之價格、數量、品質、服務或其他條件,爭取交易機會 之行為", "D": "控制性持股,指前項之人或團體及其關係人持有他事業有表決權之股份或出資額,超過他事業 已發行有表決權之股份總數或資本總額半數者"}, "answer": "A", "explanation": "【解析】選(A)。依公平交易法第21條第4項規定，廣告薦證者係指「廣告主以外」之發表見解、意見或親身體驗者（如名人、代言人或專家），選項定義稱「廣告主」自己，定義錯誤，故選(A)。", "year": "114年"}, {"id": 25, "subject": "不動產經紀相關法規概要", "question": "依消費者保護法之規定,下列敘述何者正確?", "options": {"A": "定型化契約條款:指以企業經營者提出之定型化契約條款作為契約內容之全部或一部而訂立之 契約", "B": "邀約交易:指企業經營者未經邀約而與消費者在其住居所、工作場所、公共場所或其他場所所 訂立之契約", "C": "分期付款:指買賣契約約定消費者支付頭期款,餘款分期支付,而企業經營者於收受頭期款時, 交付標的物與消費者之交易型態", "D": "通訊交易:指企業經營者以廣播、電視、電話、傳真、型錄、報紙、雜誌、網際網路、傳單或 其他類似之方法,消費者於檢視商品或服務之後,而與企業經營者所訂立之契約"}, "answer": "C", "explanation": "【解析】選(C)。依消費者保護法第2條第11款定義：「分期付款：指買賣契約約定消費者支付頭期款，餘款分期支付，而企業經營者於收受頭期款時，交付標的物與消費者之交易型態。」故(C)完全正確。", "year": "114年"}], "不動產估價概要": [{"id": 1, "subject": "不動產估價概要", "question": "鄰近國小的店舖,做販賣文具及圖書生意使用,此為何種不動產估價原則之掌握?", "options": {"A": "外部性原則", "B": "貢獻原則", "C": "適合原則", "D": "內部性原則"}, "answer": "C", "explanation": "【解析】選(C)。「適合原則」係指不動產之用途與規模必須與其周圍環境相適合、相協調，方能發揮最高效用。鄰近國小之店舖經營文具圖書，正好配合國小學生與教學需求，達成與外部環境條件之適合性，故屬適合原則。", "year": "114年"}, {"id": 2, "subject": "不動產估價概要", "question": "以成本法進行不動產估價,下列何者非為總成本應包括之項目?", "options": {"A": "營造或施工費", "B": "出售不動產之所得稅", "C": "資本利息", "D": "建築利潤"}, "answer": "B", "explanation": "【解析】選(B)。依不動產估價技術規則第49條規定，成本法總成本包括營造或施工費、規劃設計費、資本利息、營造施工管理費、銷售費用、建築利潤及其他稅費（如印花稅、工程受益費等）。「出售不動產之所得稅」為營利所得之稅後負擔，不屬於營建開發成本結構，故非總成本項目。", "year": "114年"}, {"id": 3, "subject": "不動產估價概要", "question": "建築物屋齡 10 年,重建成本 2,000 萬元,若殘價率為 10%,經濟耐用年數 50 年,選擇等速折舊 路徑的方法計算累積折舊額為多少萬元?", "options": {"A": "400", "B": "40", "C": "360", "D": "36"}, "answer": "C", "explanation": "【解析】選(C)。定額折舊法（等速折舊）：每年折舊額 d = C × (1 - s) / N = 2,000 × (1 - 0.1) / 50 = 2,000 × 0.9 / 50 = 36 萬元。累積折舊額 D = d × 經歷年數 = 36 × 10 = 360 萬元。故選(C)。", "year": "114年"}, {"id": 4, "subject": "不動產估價概要", "question": "比較標的為與法定用途不符之交易,應先作適當之調整才能採用,此為何種調整?", "options": {"A": "情況調整", "B": "價格日期調整", "C": "區域因素調整", "D": "個別因素調整"}, "answer": "A", "explanation": "【解析】選(A)。依不動產估價技術規則第21條規定，比較標的之交易如有下列情事者，應進行「情況調整」：包含受債權債務關係影響、親友間交易、急買急賣、法定用途或管制不符等非正常市場交易條件之修正，故選(A)。", "year": "114年"}, {"id": 5, "subject": "不動產估價概要", "question": "下列價格調整率何者符合不動產估價技術規則之規定?", "options": {"A": "區域因素總價格調整率為 18%", "B": "個別因素總價格調整率為 18%", "C": "個別因素內之任一單獨項目之價格調整率為 18%", "D": "情況、價格日期、區域因素及個別因素調整總調整率為 18%"}, "answer": "D", "explanation": "【解析】選(D)。依不動產估價技術規則第26條規定：「情況、價格日期、區域因素及個別因素之綜合調整率，以不超過百分之三十為原則。」選項(D)之18%低於30%上限，符合規定。另單一項目調整率不超過15%，區域或個別總調整率不超過20%，故(A)(B)(C)敘述之規定數值不符規定意旨，選(D)。", "year": "114年"}, {"id": 6, "subject": "不動產估價概要", "question": "勘估標的未來平均 1 年期間之客觀淨收益為 100 萬元,收益價格為 2,000 萬元,收益資本化率為:", "options": {"A": "3%", "B": "5%", "C": "8%", "D": "10%"}, "answer": "B", "explanation": "【解析】選(B)。直接資本化法公式：收益價格 P = 客觀淨收益 a / 收益資本化率 R。因此 R = a / P = 100萬 / 2,000萬 = 5%，故選(B)。", "year": "114年"}, {"id": 7, "subject": "不動產估價概要", "question": "以投資為目的之不動產投資評估,最適合的估價方法為:", "options": {"A": "比較法", "B": "折現現金流量分析法", "C": "成本法", "D": "土地開發分析法"}, "answer": "B", "explanation": "【解析】選(B)。依不動產估價技術規則第31條規定，折現現金流量分析法（DCF）評估各期預期現金淨流入與期末處分價值之折現值，最適合應用於具投資目的、重視多期未來收益與投資報酬分析之不動產估價，故選(B)。", "year": "114年"}, {"id": 8, "subject": "不動產估價概要", "question": "債務保障比率為 1.3、貸款常數為 0.055、貸款資金占不動產價格比率為 70%,收益資本化率約為:", "options": {"A": "3%", "B": "4%", "C": "5%", "D": "6%"}, "answer": "C", "explanation": "【解析】選(C)。依抵押貸款與自有資金綜合分析法之債務保障比率法：R = DCR（債務保障比率）× MC（貸款常數）× LTV（貸款價值比）= 1.3 × 0.055 × 0.70 = 0.05005 ≈ 5%，故選(C)。", "year": "114年"}, {"id": 9, "subject": "不動產估價概要", "question": "附著於土地之工事及水利土壤之改良,以何種方法估價為原則?", "options": {"A": "比較法", "B": "收益法", "C": "成本法", "D": "土地殘餘法"}, "answer": "C", "explanation": "【解析】選(C)。依不動產估價技術規則第108條規定：「附著於土地之工事及水利土壤之改良，以成本法估價為原則。」因該類工事不易在市場上找到比較案例或獨立收益，故以重建或重置工料成本推估，故選(C)。", "year": "114年"}, {"id": 10, "subject": "不動產估價概要", "question": "下列有關直接資本化法之敘述何者正確?", "options": {"A": "屬於比較法之一種", "B": "應以勘估標的作最合理使用之客觀淨收益為基準", "C": "應用價格日期當時適當之收益資本化率推算", "D": "計算過程應另加計期末價值"}, "answer": "C", "explanation": "【解析】選(C)。依不動產估價技術規則第29條規定，直接資本化法指勘估標的未來平均一年期間之客觀淨收益，應用價格日期當時「適當之收益資本化率」推算其價值，故(C)正確。(A)屬於收益法非比較法；(B)應以「最有效使用」為基準（非最合理使用）；(D)直接資本化法為永續等額收益還原，不另加計期末價值（折現現金流量法才計期末價值）。", "year": "114年"}, {"id": 11, "subject": "不動產估價概要", "question": "下列有關成本法之敘述何者正確?", "options": {"A": "建物估價以求取重置成本為原則", "B": "預售收入之資金應計息", "C": "建物折舊額計算應以物理耐用年數為主", "D": "建物之殘餘價格率以不超過百分之十為原則"}, "answer": "D", "explanation": "【解析】選(D)。依不動產估價技術規則第63條規定：「建物之殘餘價格率，以不超過百分之十為原則。」故(D)正確。(A)以重建成本為原則，無法求取時始求重置成本；(B)預售收入資金不計息；(C)折舊額計算應以經濟耐用年數為主（非物理耐用年數）。", "year": "114年"}, {"id": 12, "subject": "不動產估價概要", "question": "有關土地開發分析法之資本利息綜合利率之敘述何者正確?", "options": {"A": "資本利息綜合利率=貸款利息年利率 ×(建物價值比率+土地價值比率×1/2)× 開發年數", "B": "資本利息綜合利率=資本利息年利率 ×(建物價值比率+土地價值比率×1/2)× 開發年數", "C": "資本利息綜合利率=資本利息年利率 ×(土地價值比率+建物價值比率×1/2)× 開發年數", "D": "資本利息綜合利率=貸款利息年利率 ×(土地價值比率+建物價值比率×1/2)× 開發年數"}, "answer": "C", "explanation": "【解析】選(C)。依不動產估價技術規則第73條規定，土地開發分析法之資本利息綜合利率 = 資本利息年利率 × (土地價值比率 + 建物價值比率 × 1/2) × 開發年數。因土地自始即購置需全期計息，建物工程款係隨施工進度陸續投入，故建物部分平均以1/2計息，選(C)。", "year": "114年"}, {"id": 13, "subject": "不動產估價概要", "question": "下列因素:1地區淹水 2捷運站設置 3利率變動 4離小學距離,那些是屬於影響不動產價 格之區域因素?", "options": {"A": "12", "B": "13", "C": "234", "D": "1234"}, "answer": "A", "explanation": "【解析】選(A)。區域因素係指影響近鄰地區不動產價格水準之全區性自然、社會、經濟環境條件。1地區淹水（自然地理環境）與2捷運站設置（區域公共交通設施）屬於影響整區之區域因素；3利率變動屬一般因素；4特定房屋距小學距離則屬個別標的之個別因素，故選(A)。", "year": "114年"}, {"id": 14, "subject": "不動產估價概要", "question": "下列何者是個別因素之描述?", "options": {"A": "甲先生的房子位於重劃區內,房價水準很高", "B": "乙小姐的房子距捷運站距離大約 50 公尺", "C": "X 大學特定區生活機能佳", "D": "大巨蛋球場完工,周圍不動產房價跟著起漲"}, "answer": "B", "explanation": "【解析】選(B)。個別因素係指個別不動產本身特有之微觀條件（如宗地條件、個別建物距車站之特定距離）。「乙小姐的房子距捷運站大約50公尺」具體指涉特定個別不動產之位置特徵，屬個別因素；其他選項描述重劃區、大學特定區或商圈者屬區域因素。", "year": "114年"}, {"id": 15, "subject": "不動產估價概要", "question": "下列各項原則中,何者最能說明畸零地價格偏高的現象?", "options": {"A": "預期原則", "B": "貢獻原則", "C": "適合原則", "D": "外部性原則"}, "answer": "B", "explanation": "【解析】選(B)。「貢獻原則」指不動產之構成部分其價值大小取決於該部分對整體不動產價值所做之貢獻。畸零地本身難以單獨建築使用，但與相鄰土地合併後可使整體基地達到可建築標準與臨路面寬，大幅提升合地總價值，因此其價格遠高於一般常態單價，此即為貢獻原則之具體表現。", "year": "114年"}, {"id": 16, "subject": "不動產估價概要", "question": "評估臺南孔廟的現值,依不動產估價技術規則之規定,其價格種類為下列何者?", "options": {"A": "正常價格", "B": "限定價格", "C": "特定價格", "D": "特殊價格"}, "answer": "D", "explanation": "【解析】選(D)。依不動產估價技術規則第6條，特殊價格指文化資產、宗祠、寺廟等古蹟保存、公共設施用地等特殊不動產，於非市場買賣情況下所評估之價格。臺南孔廟屬法定文化古蹟，評估其現值屬於特殊價格，故選(D)。", "year": "114年"}, {"id": 17, "subject": "不動產估價概要", "question": "不動產估價報告書中應註明價格日期與勘查日期,就時間發生的先後下列敘述何者正確?", "options": {"A": "價格日期先於勘查日期", "B": "勘查日期先於價格日期", "C": "勘查日期等於價格日期", "D": "不一定"}, "answer": "D", "explanation": "【解析】選(D)。「價格日期」為勘估標的價值認定之基準日；「勘查日期」為實地現場勘察之日期。實務上價格日期可能與勘查日期同日，亦可能因委託指定回溯估價（價格日期早於勘查日）或預測未來期日，故兩者先後「不一定」，選(D)。", "year": "114年"}, {"id": 18, "subject": "不動產估價概要", "question": "勘估標的營造或施工費之求取得採直接法或間接法,下列各方法中何者相對精細?", "options": {"A": "工程造價比較法", "B": "淨計法", "C": "單位工程法", "D": "單位面積比較法"}, "answer": "B", "explanation": "【解析】選(B)。求取營造或施工費之直接法中，「淨計法」（數量調查法）需詳列各工項細目材料用量、人工工數及各項單價逐一細算加總，為所有估價方法中程序最繁複、計算最精密細緻之方法，故選(B)。", "year": "114年"}, {"id": 19, "subject": "不動產估價概要", "question": "收益法中對於收益的資本化可採收益資本化率或折現率,下列對於兩者數值高低關係之敘述何者 正確?", "options": {"A": "收益資本化率高於折現率", "B": "收益資本化率低於折現率", "C": "收益資本化率等於折現率", "D": "不一定"}, "answer": "D", "explanation": "【解析】選(D)。收益資本化率（Cap Rate）與折現率（Discount Rate）之關係取決於未來收益增長預期。依果登模型 R = Y - g，若未來收益預期增長（g > 0），則 R < Y；若預期衰退（g < 0），則 R > Y；若維持不變，則 R = Y。因此兩者數值大小高低視市場預期而定，不一定孰高孰低，選(D)。", "year": "114年"}, {"id": 20, "subject": "不動產估價概要", "question": "不動產相對一般性財貨具低流通、高風險、高增值及管理較難等特性;於採風險溢酬法決定收益 資本化率時,上述特性中何者與收益資本化率高低呈反向變動?", "options": {"A": "流通性", "B": "風險性", "C": "增值性", "D": "管理難度"}, "answer": "C", "explanation": "【解析】選(C)。收益資本化率可視為投資者要求之報酬率。不動產之增值性（期待增值率 g）越高時，投資人願意接受較低的當期收益率（Cap Rate = 要求報酬率 - 期待增值率），因此「增值性」與收益資本化率呈反向變動關係；反之風險高、管理難度高、流通性差則要求較高的資本化率（正向），選(C)。", "year": "114年"}, {"id": 21, "subject": "不動產估價概要", "question": "以直接資本化法對同一不動產之土地、建物及不動產分別評估其價值,則三者之收益資本化率數 值何者最高?", "options": {"A": "土地", "B": "建物", "C": "不動產", "D": "不一定"}, "answer": "B", "explanation": "【解析】選(B)。建物具備折舊與耐用年數限制，隨時間推移價值衰減，風險與重置成本需求較高，因此投資人對建物要求之收益資本化率必須包含折舊回收率，必然高於永久性不折舊之土地資本化率，故建物之收益資本化率數值最高，選(B)。", "year": "114年"}, {"id": 22, "subject": "不動產估價概要", "question": "依不動產估價技術規則第 130 條之規定,不動產租金估計以估計勘估標的之何種租金為原則?", "options": {"A": "經濟租金", "B": "支付租金", "C": "合理租金", "D": "實質租金"}, "answer": "D", "explanation": "【解析】選(D)。依不動產估價技術規則第130條規定：「不動產租金估計，以估計勘估標的之實質租金為原則。」實質租金包含名目支付租金、押金利息及其他權利金運用利益之總和，選(D)。", "year": "114年"}, {"id": 23, "subject": "不動產估價概要", "question": "依不動產估價技術規則第 32 條之規定,若期末處分價值已知,以折現現金流量分析法計入該價 值時,應採取那一種資本化率?", "options": {"A": "直接資本化率", "B": "綜合資本化率", "C": "折現率", "D": "利率"}, "answer": "C", "explanation": "【解析】選(C)。折現現金流量分析法（DCF）係將各期淨收益及期末處分價值折現為現值之方法。各期未來現金流入及期末處分價值均為未來價值，應採用反映資金時間價值及風險之「折現率」折現，故選(C)。", "year": "114年"}, {"id": 24, "subject": "不動產估價概要", "question": "於不動產租金估計中有所謂的經濟租金與支付租金,兩者的大小關係為何?", "options": {"A": "經濟租金高於支付租金", "B": "經濟租金低於支付租金", "C": "經濟租金等於支付租金", "D": "不一定"}, "answer": "D", "explanation": "【解析】選(D)。「經濟租金」指在正常市場中依最有效使用狀態下應得之客觀合理租金；「支付租金」指當事人間實際約定支付之租金契約金額。實務上支付租金可能高於、等於或低於經濟租金（視租約簽訂時空、租客議價力、親友關係而定），兩者大小關係不一定，選(D)。", "year": "114年"}, {"id": 25, "subject": "不動產估價概要", "question": "估價事務所接受委託展開估價作業前應先確定估價基本事項,於下列各項中應包含那些項目? 1確定勘估標的內容 2確定勘查日期 3確定價格種類 4確定估價目的 5確定估價條件", "options": {"A": "僅134", "B": "1234", "C": "1345", "D": "12345"}, "answer": "C", "explanation": "【解析】選(C)。依不動產估價技術規則第11條規定，受託估價前應確定之基本事項包括：1.確定勘估標的內容、3.確定價格種類或租金種類、4.確定估價目的、5.確定估價條件、以及價格日期。2「勘查日期」為實地現勘作業執行之日期，非受託前確定之基本事項，故應選1、3、4、5，選(C)。", "year": "114年"}]}, "100年真題": {"民法概要": [{"id": 1, "year": "100年", "subject": "民法概要", "question": "下列有關贈與契約之敘述何者正確?", "options": {"A": "贈與契約之贈與人對其贈與之物,有瑕疵時,原則上贈與人應負物之瑕疵擔保責任", "B": "贈與契約為無償契約,所以贈與人均可撤銷其贈與", "C": "定期給付之贈與,不因贈與人死亡而失其效力", "D": "贈與人僅就其故意或重大過失,對於受贈人負給付不能之責任"}, "answer": "D", "explanation": "【解析】選(D)。依民法第410條：「贈與人僅就其故意或重大過失，對於受贈人負給付不能之責任。」(A)贈與為無償契約，原則不負物之瑕疵擔保責任（民法第411條）；(B)贈與物權利移轉後或經公證、為履行道德義務者不得任意撤銷（民法第408條）；(C)定期給付之贈與，因贈與人或受贈人之死亡而失其效力（民法第414條）。"}, {"id": 2, "year": "100年", "subject": "民法概要", "question": "關於租貸契約,下列何者錯誤?", "options": {"A": "出租人不以所有權人為限", "B": "為立字據之租約無限", "C": "租賃契約之承租人為租賃物之直接占有人,出租人為間接占有人", "D": "租賃契約為有償契約"}, "answer": "B", "explanation": "【解析】選(B)。(B)不動產之租賃契約，其期限逾一年者，應以字據訂立之，未以字據訂立者，視為不定期限之租賃（民法第422條），並非無效或無限。(A)出租人不以所有權人為限，債權契約負擔行為不以有處分權為必要；(C)承租人直接管領標的物為直接占有人，出租人為間接占有人；(D)租賃契約以支付租金為要素，為雙務、有償契約。"}, {"id": 3, "year": "100年", "subject": "民法概要", "question": "下列何種契約之屬性為無償契約?", "options": {"A": "使用借貸", "B": "僱傭契約", "C": "承攬契約", "D": "居間契約"}, "answer": "A", "explanation": "【解析】選(A)。使用借貸係一方以物交付他方無償使用，他方於使用後返還其物之契約（民法第464條），性質上為無償契約。僱傭、承攬及居間皆為有償契約。"}, {"id": 4, "year": "100年", "subject": "民法概要", "question": "下列何者,非民法所規定關於出租人之義務?", "options": {"A": "租賃物之交付義務", "B": "對租賃物之修繕義務", "C": "租賃物為動物時,其飼料費之支出", "D": "租賃物為房屋時,該房屋所應繳納之稅金"}, "answer": "C", "explanation": "【解析】選(C)。依民法第423條至第437條規定，出租人負有租賃物交付義務、修繕義務及負擔通常稅捐義務（民法第427條）。租賃物若為動物，飼料費屬於通常保管或使用之必要費用，原則應由承租人負擔，非出租人之義務。"}, {"id": 5, "year": "100年", "subject": "民法概要", "question": "甲向乙借了 50 萬,約定利息為週年利率百分之 30 計算,下列敘述何者正確?", "options": {"A": "約定之利率過高,該消費借貸無效", "B": "約定之利率過高,超過法定週年 利率 20%部分之利息無效", "C": "約定之利率過高,超過法定週年利率 20%部分之利息,乙無請求權", "D": "依契約自由原則,該利率之約定有效,乙得向甲請求利息之支付"}, "answer": "C", "explanation": "【解析】選(C)。依民法第205條（舊法時期約定利率超過週年20%者，債權人對於超過部分之利息無請求權；現行法更調降為16%且超過部分無效）。在考題當年度規定，超過法定上限之利息，債權人無請求權，債務人得拒絕給付，故選(C)。"}, {"id": 6, "year": "100年", "subject": "民法概要", "question": "甲向乙買一台液晶電視,約定一手交錢一手交貨,於乙未交付液晶電視前,當乙向甲請求價金之支付時,甲得主張:", "options": {"A": "撤銷權", "B": "解除權", "C": "不安抗辯權", "D": "同時履行抗辯權"}, "answer": "D", "explanation": "【解析】選(D)。買賣為雙務契約，雙方互負對待給付義務。於他方未為對待給付前，得依民法第264條主張「同時履行抗辯權」，拒絕自己之給付。"}, {"id": 7, "year": "100年", "subject": "民法概要", "question": "甲向大大車行買一台中古 A 車給其子乙,並約定其子乙得直接向該車行請求交付 A 車,則甲與大大車行間之契約屬於:", "options": {"A": "附負擔之法律行為", "B": "第三人利益契約", "C": "債權讓與行為", "D": "第三人保證契約"}, "answer": "B", "explanation": "【解析】選(B)。依民法第269條第1項規定：「以契約約定由一方向第三人為給付者，要約人得請求債務人向第三人為給付，其第三人對於債務人，亦有直接請求給付之權。」此為典型之「第三人利益契約」。"}, {"id": 8, "year": "100年", "subject": "民法概要", "question": "甲向乙承諾當民國 100 年 12 月 31 日那天,要將天上的某一顆星星送給乙,乙並允諾之。則甲乙間之約定效力如何?", "options": {"A": "因自始客觀不能,故約定無效", "B": "因雙方意思表示合致,故約定有效", "C": "因嗣後客觀不能,故約定有效", "D": "因嗣後主觀不能,故約定有效"}, "answer": "A", "explanation": "【解析】選(A)。贈送天上的星星客觀上根本無從給付與實現，屬於「自始客觀不能」。依民法第246條第1項前段規定：「以不能之給付為標的者，其契約為無效。」"}, {"id": 9, "year": "100年", "subject": "民法概要", "question": "甲出售土地給乙,交付土地後乙發現實際坪數比契約書坪數少 5%。下列敘述,何者錯誤?", "options": {"A": "若無顯失公平之情形,乙可以請求價金或解除契約", "B": "瑕疵擔保責任自土地交付時起經過三年而消滅", "C": "此瑕疵若乙於契約成立時知悉而不甲不知,甲不負擔保之責", "D": "乙若次通知甲坪數短少,視為承認其所受領之物"}, "answer": "B", "explanation": "【解析】選(B)。依民法第365條規定，買受人因物有瑕疵而得解除契約或請求減少價金者，其請求權於買受人通知後六個月間不行使或自物之交付時起經過五年而消滅，並非三年，故(B)錯誤。"}, {"id": 10, "year": "100年", "subject": "民法概要", "question": "甲為定作人,與乙訂立承攬契約,由乙為甲建一房屋。關於此案例,下列敘述何者正確?", "options": {"A": "乙得就承攬之報酬額,對於將來完成之甲之房屋,請求預為抵押權之登記", "B": "工作未完成前,定作人甲不得隨時終止契約", "C": "定作人甲所供給之材料,因不可抗力而毀損者,承攬人須負其責", "D": "如乙所蓋房屋有瑕疵,甲於房屋交付後二年始發見者,不得請求乙修補"}, "answer": "A", "explanation": "【解析】選(A)。依民法第513條第1項規定，承攬之工作為建築物或其他土地上之工作物，承攬人得就承攬關係報酬額，對於其工作所附之定作人之不動產，請求預為抵押權之登記，故(A)正確。"}, {"id": 11, "year": "100年", "subject": "民法概要", "question": "下列敘述,何者正確?", "options": {"A": "契約之要約人,因要約而受拘束,不可預先聲明不受拘束", "B": "貨物標定賣價陳列者,視為要約之引誘", "C": "對話為要約者,非立時承諾,即失其拘束力,因此不得定承諾期限", "D": "將要約變更而承諾者,視為拒絕原要約而為新要約"}, "answer": "D", "explanation": "【解析】選(D)。依民法第160條第2項規定：「將要約擴張、限制或為其他變更而承諾者，視為拒絕原要約而為新要約。」故(D)正確。(A)要約得預先聲明不受拘束；(B)貨物標定賣價陳列者視為要約；(C)對話要約亦得約定承諾期限。"}, {"id": 12, "year": "100年", "subject": "民法概要", "question": "乙承租甲所有之土地種植果樹,約定租期二年,未訂立字據。關於此案例,下列敘述何者正確?", "options": {"A": "此為定期租賃契約", "B": "乙於契約成立後,得請求甲為地上權之登記", "C": "若甲於土地交給乙占有後,將土地所有權移轉給丙,乙仍可主張租賃契約對丙成立", "D": "就租賃物應納之一切稅捐,由出租人甲負擔"}, "answer": "D", "explanation": "【解析】選(D)。依民法第427條規定：「就租賃物應納之一切稅捐，由出租人負擔。」(A)不動產租期逾一年未立字據視為不定期限；(B)承租人未得特約不得請求地上權登記；(C)未立字據逾五年之租賃不適用買賣不破租賃（民法第425條）。"}, {"id": 13, "year": "100年", "subject": "民法概要", "question": "下列關於不當得利之敘述,何者正確?", "options": {"A": "無法律上之原因而受利益,致他人受損害者,應返還其利益", "B": "因清償債務而受利益,於給付時明知無給付之義務者,得請求返還", "C": "不當得利之受領人,只須返還其所受之利益,如本於該利益更有所取得者,無須返還", "D": "不當得利之受領人,不知無法律上之原因,縱其所受之利益已不存在者,仍應負返還之責任"}, "answer": "A", "explanation": "【解析】選(A)。依民法第179條前段規定：「無法律上之原因而受利益，致他人受損害者，應返還其利益。」(B)明知無給付義務而清償者不得請求返還（第180條）；(C)本於利益更有所得亦應返還（第181條）；(D)善意受領人利益已不存在者免負返還責任（第182條）。"}, {"id": 14, "year": "100年", "subject": "民法概要", "question": "下列何者為附解除條件之法律行為?", "options": {"A": "甲如能考 100 分,乙就給甲 100 元", "B": "甲向乙借 1 萬元,約定乙每月支付利息 100 元", "C": "當甲大學畢業時,乙的房屋就不再出租給甲", "D": "甲乙間約定於民國 105 年時,二人即結婚"}, "answer": "C", "explanation": "【解析】選(C)。附解除條件之法律行為，於條件成就時失其效力（民法第99條第2項）。「當大學畢業時，房屋就不再出租」係以畢業為條件成就時終止契約效力，為解除條件。(A)為停止條件；(D)為附終期之法律行為。"}, {"id": 15, "year": "100年", "subject": "民法概要", "question": "關於死亡宣告,下列敘述何者錯誤?", "options": {"A": "得聲請宣告者,僅限於失蹤人之利害關係人", "B": "死亡宣告係私法上的制度,不生公法上的效果", "C": "死亡宣告在於結束失蹤人原住居所為中心之法律關係,而不在剝奪失蹤人之權利能力", "D": "死亡宣告為推定死亡,故允許提出反證而撤銷死亡宣告"}, "answer": "B", "explanation": "【解析】選(B)。死亡宣告雖主要終結以原住居所為中心之私法關係，但在公法上（如選舉權、稅籍登記、兵役等）亦發生相對應之公法上效果，並非完全不生公法效果，故(B)錯誤。"}, {"id": 16, "year": "100年", "subject": "民法概要", "question": "關於財團法人之敘述,下列何者正確?", "options": {"A": "其權利能力始於訂立捐助章程,終於清算解散", "B": "財團為公益法人,其設立須經地方法院許可", "C": "董事有數人時,除章程另有規定外,各董事均得代表法人", "D": "財產法人並非自然人,無侵權行為能力"}, "answer": "C", "explanation": "【解析】選(C)。依民法第27條第2項規定，董事有數人者，除章程另有規定外，各董事均得代表法人，故(C)正確。(A)權利能力始於向法院登記完成；(B)主管機關許可後向法院登記；(D)法人具有侵權行為能力（民法第28條）。"}, {"id": 17, "year": "100年", "subject": "民法概要", "question": "關於法人依其性質,不得享有下列何種權利?", "options": {"A": "姓名權", "B": "自由權", "C": "專利權", "D": "名譽權"}, "answer": "B", "explanation": "【解析】選(B)。法人性質上為無肉體組織之法律主體，故無法享有專屬於自然人生理肉體之「自由權」（如身體行動自由），但得享有姓名權、名譽權、商譽等。"}, {"id": 18, "year": "100年", "subject": "民法概要", "question": "甲到乙所開設之賭場賭博,賭輸了 10 萬元,下列敘述何者正確?", "options": {"A": "賭博為甲乙間債務發生之原因關係,所以甲應支付乙 10 萬", "B": "如甲已經付款給乙,則甲得主張賭博行為違反公序良俗無效,依不當得利向乙請求返還", "C": "如甲已經付款給乙,雖甲得主張賭博行為違反公序良俗無效,但甲之给付為出於不法原因之给付,所以不得向乙請 求返還", "D": "如甲已經付款給乙,甲得主張侵權行為,向乙請求損害賠償"}, "answer": "C", "explanation": "【解析】選(C)。賭博行為違反公共秩序及善良風俗而無效，但甲輸錢已付款，其給付係出於不法原因之給付，依民法第180條第4款規定不得請求返還，故選(C)。"}, {"id": 19, "year": "100年", "subject": "民法概要", "question": "甲僱傭 17 歲未婚之乙為店員,並授與代理權以甲之名義販售物品,若甲之法定代理人均不同意。則:", "options": {"A": "僱傭契約無效,代理權授與有效", "B": "僱傭契約無效,代理權授與亦無效", "C": "僱傭契約有效,代理權授與無效", "D": "僱傭契約有效,代理權授與亦有效"}, "answer": "A", "explanation": "【解析】選(A)。依民法第77條，限制行為能力人訂立僱傭契約負擔義務，未得法定代理人同意無效；但民法第107條及第104條規定「代理人之意思表示，不因其為限制行為能力人而受影響」，代理權授與為單獨行為且中性無損其利益，故代理權授與有效，選(A)。"}, {"id": 20, "year": "100年", "subject": "民法概要", "question": "甲男於民國 90 年 3 月 1 日離開住所,從此失蹤,其妻乙依法聲請死亡宣告,經法院判決宣告死亡。若甲實際上並未死 亡,請問下列敘述,何者正確?", "options": {"A": "推定甲於民國 90 年 3 月 1 日死亡", "B": "受死亡宣告後,甲所為之法律行為均無效", "C": "若甲安然生還,該死亡宣告即自動失去效力", "D": "乙繼承甲之財產,善意處分之部分不受甲生還影響"}, "answer": "D", "explanation": "【解析】選(D)。依家事事件法及民法法理，撤銷死亡宣告前，善意取得或處分財產之行為不受撤銷死亡宣告判決之影響，故善意受讓或處分之部分不受甲生還影響，選(D)。"}, {"id": 21, "year": "100年", "subject": "民法概要", "question": "下列何者,屬於民法上之物?", "options": {"A": "活人胸腔中跳動之心臟", "B": "博物館中展示之木乃伊", "C": "天上飄浮的雲層", "D": "植入身體的人造關節"}, "answer": "B", "explanation": "【解析】選(B)。民法上之物指人身之外具有支配可能性之有體物。博物館展示之木乃伊已非活人身體成分，具有歷史文化財產價值且得為交易支配客體，屬於民法上之物。心臟與植入關節為人體組織，雲層無法支配。"}, {"id": 22, "year": "100年", "subject": "民法概要", "question": "下列何者,非基於所有權而發生之請求權?", "options": {"A": "所有物返還請求權", "B": "所有權之妨害除去請求權", "C": "所有權之妨害預防請求權", "D": "占有物之返還請求權"}, "answer": "D", "explanation": "【解析】選(D)。民法第767條規定之物上請求權包括所有物返還請求權、除去妨害請求權、消除危險請求權。「占有物返還請求權」係基於事實管領力（民法第962條占有保護）而發生，非基於所有權。"}, {"id": 23, "year": "100年", "subject": "民法概要", "question": "關於普通抵押權之敘述,下列何者錯誤?", "options": {"A": "抵押權之設定須以書面為之,並辦理登記", "B": "抵押人設定抵押權時,對於抵押物須有所有權及處分權", "C": "以抵押權所擔保之債權,經讓與其一部者,抵押權仍不受影響", "D": "於抵押權所擔保之債權全部被清償時,抵押權仍不消滅"}, "answer": "D", "explanation": "【解析】選(D)。抵押權具有從屬性，其所擔保之債權全部受清償而消滅時，抵押權隨之消滅，不得繼續存續，故(D)錯誤。"}, {"id": 24, "year": "100年", "subject": "民法概要", "question": "下列關於地上權之敘述,何者正確?", "options": {"A": "稱普通地上權者,謂以在他人土地之上下有建築物或種植竹木為目的而使用其土地之權", "B": "地上權不因建築物或其他工作物之滅失而消滅", "C": "地上權人均得隨時拋棄其權利", "D": "土地所有權讓與時,以預付之地租,均不得對抗第三人"}, "answer": "B", "explanation": "【解析】選(B)。依民法第841條規定：「地上權不因建築物或其他工作物之滅失而消滅。」地上權係使用土地之權利，其上之建物滅失後地上權仍存續。(A)普通地上權不包括種植竹木（已劃歸農育權）；(C)定有存續期間者拋棄受有限制；(D)預付地租經登記可對抗第三人。"}, {"id": 25, "year": "100年", "subject": "民法概要", "question": "甲有 A、B 二地,因出賣 A 地給乙,至 B 地與公路無適宜之連絡,不能為通常之使用。下列敘述何者正確?", "options": {"A": "甲可以任擇 A 地或其他相鄰之地而通行之", "B": "甲通行鄰地已造成鄰地負擔,不得再主張開設道路", "C": "甲通行鄰地時,為求便利,可任意選擇通行之處所", "D": "若甲不主張開設道路而通行 A 地,無須支付乙償金"}, "answer": "D", "explanation": "【解析】選(D)。因土地一部之讓與，致有不通公路之土地者，土地所有人僅得通行受讓人或讓與人之所有地，且「無須支付償金」（民法第789條），故(D)正確。(A)僅得通行讓與之地，不得任意任擇他地；(B)有開設道路之權；(C)應擇損害最少之處所。"}, {"id": 26, "year": "100年", "subject": "民法概要", "question": "甲死亡,遺留房屋一棟,有乙、丙二位繼承人。下列敘述何者正確?", "options": {"A": "未分割前,該屋為乙、丙分別共有", "B": "移轉豋記前,乙、丙即取得該屋所有權,然而應經登記,始得處分之", "C": "若該屋被無權占有,乙、丙須共同向無權占有人起訴請求返還", "D": "若乙、丙於繼承前於該屋上有抵押權,該抵押權不因繼承而受影響"}, "answer": "B", "explanation": "【解析】選(B)。因繼承於登記前已取得不動產物權，但非經登記不得處分其物權（民法第759條），故(B)正確。(A)分割前為公同共有；(C)各共有人得單獨為全體請求返還共有物（民法第821條）；(D)債權債務可能混同。"}, {"id": 27, "year": "100年", "subject": "民法概要", "question": "下列關於動產之敘述,何者錯誤?", "options": {"A": "甲以占有之意思,占有被遺棄之流浪狗,甲取得該狗之所有權", "B": "公園管理員在所管理之公園內拾得遺失物者,對遺失人不得請求報酬", "C": "甲乙各有一桶白油漆,不慎混合在一起,二人應按其混合時之價值,共有混合後之油漆", "D": "加工於他人之動產者,其加工物之所有權,原則上屬於加工人"}, "answer": "D", "explanation": "【解析】選(D)。依民法第814條規定，加工於他人之動產者，其加工物之所有權原則上屬於「材料所有人」；僅於工作所增加之價值顯逾材料價值時，始例外歸屬於加工人，故(D)稱原則屬於加工人錯誤。"}, {"id": 28, "year": "100年", "subject": "民法概要", "question": "甲將其所有之 A 車借給乙,不久卻將 A 車贈與給乙,則甲對乙得以何種方式交付 A 車?", "options": {"A": "現實交付", "B": "簡易交付", "C": "占有改定", "D": "指示交付"}, "answer": "B", "explanation": "【解析】選(B)。動產物權讓與時受讓人已占有該動產者，於讓與合意時即生交付效力，稱為「簡易交付」（民法第761條第1項但書）。A車已借給乙占有，贈與時直接合意即完成簡易交付。"}, {"id": 29, "year": "100年", "subject": "民法概要", "question": "甲將 A 屋設定普通抵押權給乙銀行後,甲又將該 A 屋出租給丙,下列敘述何者為正確?", "options": {"A": "甲乙間之抵押權無效", "B": "甲丙間之租約無效", "C": "甲乙間之抵押權不因此而受影響,但 A 屋之租金由乙收取之", "D": "甲乙間之抵押權不因此而受影響,A 屋之租金仍由甲收取之"}, "answer": "D", "explanation": "【解析】選(D)。不動產所有人設定抵押權後得將不動產出租與他人，抵押權人於抵押物經查封前無權收取孳息，租金仍由所有權人甲收取，故(D)正確。"}, {"id": 30, "year": "100年", "subject": "民法概要", "question": "關於收養之敘述,下列何者錯誤?", "options": {"A": "限於未成年人,方得被收養", "B": "養父母死亡後,養子女得聲請法院許可終止收養", "C": "夫妻應共同收養子女", "D": "養子女從收養者之姓或維持原來之姓"}, "answer": "A", "explanation": "【解析】選(A)。我國民法並未限制成年人不得被收養，成年人亦得被收養（民法第1079條之2），故(A)稱「限於未成年人」錯誤。"}, {"id": 31, "year": "100年", "subject": "民法概要", "question": "關於離婚之敘述,下列何者錯誤?", "options": {"A": "兩願離婚,雙方當事人須以書面為之", "B": "兩願離婚時,不得請求贍養費及損害賠償", "C": "判決離婚時,因判決離婚而受有損害者,得向有過失之他方請求損害賠償", "D": "離婚時,採分別財產制者,各自取回其結婚時之財產"}, "answer": "D", "explanation": "【解析】選(D)。夫妻離婚採分別財產制者，各自取回其財產所有權，但包含婚前及婚後所各自取得之財產，並非僅取回「結婚時」之財產，且若有補償問題依法處理，故(D)錯誤。"}, {"id": 32, "year": "100年", "subject": "民法概要", "question": "依民法關於結婚之規定,下列敘述何者錯誤?", "options": {"A": "未成年人結婚,應由法定代理人代為意思表示", "B": "表兄妹結婚者,無效", "C": "有配偶者再與他人結婚時,後婚無效", "D": "原則上結婚後夫妻各保其本姓"}, "answer": "A", "explanation": "【解析】選(A)。結婚為身分行為，具一身專屬性，不得由法定代理人代為意思表示（未成年人結婚係得法定代理人同意，非代理），故(A)錯誤。"}, {"id": 33, "year": "100年", "subject": "民法概要", "question": "關於拋棄繼承之敘述,下列何者正確?", "options": {"A": "應於繼承開始之日起 2 個月內為之", "B": "繼承之拋棄,溯及於繼承開始時發生效力", "C": "拋棄繼承者,就其所管理之遺產,於拋棄當時不負任何責任", "D": "配偶拋棄繼承權者,其應繼分應歸後順序之繼承人"}, "answer": "B", "explanation": "【解析】選(B)。依民法第1175條規定：「繼承之拋棄，溯及於繼承開始時發生效力。」(A)應於知悉得繼承之時起三個月內為之；(C)於他人開始管理前仍應負管理責任；(D)配偶拋棄繼承應繼分歸屬於同順序繼承人。"}, {"id": 34, "year": "100年", "subject": "民法概要", "question": "甲男乙女欲結婚,請問下列何種情形,甲乙不得結婚?", "options": {"A": "甲男曾與乙女之母親結婚,後因不孕而離婚", "B": "甲 18 歲,乙 17 歲", "C": "甲之祖母與乙之祖母為二親等之親姐妹", "D": "甲之父母為丙、丁,乙之父母為戊、己,丙、己各自與前配偶離婚後,丙、己結婚"}, "answer": "A", "explanation": "【解析】選(A)。民法第983條第1項第2款規定，直系姻親不得結婚，姻親關係雖因離婚而消滅，但直系姻親之結婚限制於婚姻關係消滅後仍適用之。甲男曾與乙之母結婚，甲與乙為直系姻親，即使離婚後仍不得結婚，故選(A)。"}, {"id": 35, "year": "100年", "subject": "民法概要", "question": "關於法定夫妻財產制,下列敘述,何者正確?", "options": {"A": "夫妻之一方以自己財產清償他方之債務時,於婚姻關係存續中,請求償還", "B": "因繼承而得之財產,不計入夫或妻現存之婚後財產", "C": "夫或妻於婚姻關係存續中,就其婚後財產所為履行道德上義務之贈與,他方得聲請法院撤銷之", "D": "剩餘財產分配請求權或妻享有,不得由繼承人主張之"}, "answer": "C", "explanation": "【解析】選(C)。依民法第1020條之1第1項但書，夫或妻就婚後財產所為「履行道德上義務之相當贈與」，他方不得聲請法院撤銷，故(C)錯誤。(B)因繼承取得之財產不計入婚後剩餘財產；(D)剩餘財產請求權具一身專屬性修法前後有所微調，但(C)完全抵觸法條明文。"}, {"id": 36, "year": "100年", "subject": "民法概要", "question": "下列親屬若未同居一處,何者不互負扶養義務?", "options": {"A": "父母子女間", "B": "夫妻之間", "C": "兄弟姊妹相互間", "D": "直系姻親相互間"}, "answer": "D", "explanation": "【解析】選(D)。依民法第1114條第2款，夫妻之一方與他方之父母同居者互負扶養義務。若直系姻親未同居一處，則不互負法定扶養義務，故選(D)。"}, {"id": 37, "year": "100年", "subject": "民法概要", "question": "下列之人:○1 直系血親卑親屬○2 祖父母○3 兄弟姊妹○4 父母;其正確之法定遺產繼承順序為何?", "options": {"A": "○1 ○4 ○3 ○2", "B": "○1 ○4 ○2 ○3", "C": "○4 ○1 ○2 ○3", "D": "○4 ○3 ○1 ○2"}, "answer": "A", "explanation": "【解析】選(A)。依民法第1138條法定繼承順序為：(1)直系血親卑親屬、(2)父母、(3)兄弟姊妹、(4)祖父母。故排序為 1 -> 4 -> 3 -> 2，選(A)。"}, {"id": 38, "year": "100年", "subject": "民法概要", "question": "甲死亡時遺留存款三百萬元以及債務五百萬元,無配偶,有子乙與孫丙各一人。下列敘述何者正確?", "options": {"A": "若乙未依法辦理拋棄繼承,乙必須全部清償所繼承之五百萬元債務", "B": "若乙拋棄繼承,丙亦同受拋棄效力所及,無須繼承", "C": "乙所繼承之債務,以因繼承所得遺產為限,負連帶責任", "D": "乙欲拋棄繼承,應於知悉期額繼承之時起三個月內,以書面向甲之債權人與債務人為之"}, "answer": "C", "explanation": "【解析】選(C)。我國民法原則採概括繼承有限責任，繼承人對於被繼承人之債務，以因繼承所得遺產為限負清償責任，數繼承人時負連帶責任，故(C)正確。(A)以遺產300萬為限清償，無須自掏腰包；(B)乙拋棄代位由孫丙繼承；(D)拋棄繼承應以書面向法院為之。"}, {"id": 39, "year": "100年", "subject": "民法概要", "question": "下列關於遺囑之敘述何者正確?", "options": {"A": "未滿 18 歲者不得為遺囑", "B": "自書遺囑必須親筆自書,不得自行電腦打字列印後,親自簽名為之", "C": "18 歲以上之人得為遺囑見證人", "D": "口授遺囑,自遺囑人能依其他方式為遺囑之時起,經過二個月而失其效力"}, "answer": "B", "explanation": "【解析】選(B)。自書遺囑依民法第1190條必須自書全文、記明年月日並親自簽名。以電腦打字列印者不符自書要件而無效，故(B)正確。(A)年滿16歲即得立遺囑；(C)未成年人不得為遺囑見證人（未滿18歲）；(D)口授遺囑經過一個月失其效力（非二個月）。"}, {"id": 40, "year": "100年", "subject": "民法概要", "question": "下列何種繼承人之繼承特留分,為其應繼分三分之一?", "options": {"A": "直系血親卑親屬", "B": "父母", "C": "配偶", "D": "祖父母"}, "answer": "D", "explanation": "【解析】選(D)。依民法第1223條規定：直系血親卑親屬、父母、配偶之特留分為其應繼分二分之一；兄弟姊妹及「祖父母」之特留分為其應繼分三分之一。故選(D)。"}], "土地法與土地相關稅法概要": [{"id": 1, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "依土地稅法規定,因重新規定地價增繳之地價稅就其移轉土地部分,准予抵繳土 地增值稅之額度,以不超過土地移轉時應繳增值稅多少為限?", "options": {"A": "百分之一", "B": "百分之三", "C": "百分之五", "D": "百分之十"}, "answer": "C", "explanation": "【100年土地法規題目解析 · 官方答案：C】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 2, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "下列何種用地不得申請適用優惠稅率課徵地價稅?", "options": {"A": "私立動物園用地", "B": "農會辦公廳用地", "C": "國民住宅用地", "D": "勞工宿舍用地"}, "answer": "B", "explanation": "【100年土地法規題目解析 · 官方答案：B】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 3, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "依土地稅法規定,下列何者非為地價稅或田賦之納稅義務人?", "options": {"A": "土地所有權人", "B": "設有抵押權土地,為抵押權人", "C": "設有典權土地,為典權人", "D": "承領土地,為承領人"}, "answer": "B", "explanation": "【100年土地法規題目解析 · 官方答案：B】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 4, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "土地所有權人出售其自用住宅用地適用自用住宅用地稅率繳納土地增值稅後,再 出售其自用住宅用地時,應已持有該土地最少幾年以上,才能再適用此優惠稅率?", "options": {"A": "一年", "B": "五年", "C": "六年", "D": "十年"}, "answer": "C", "explanation": "【100年土地法規題目解析 · 官方答案：C】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 5, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "依土地稅法規定,關於土地增值稅之納稅義務人,何者為正確?", "options": {"A": "土地設定典權時之典權人", "B": "受託人就受託土地於信託關係存續中,有償移轉時之委託人", "C": "土地贈與時之贈與人", "D": "土地交換時之原所有權人"}, "answer": "D", "explanation": "【100年土地法規題目解析 · 官方答案：D】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 6, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "受贈土地之財團法人若未按捐贈目的使用土地,除追補應納稅額外,並處應納土 地增值稅額多少倍之罰鍰?", "options": {"A": "一倍", "B": "二倍", "C": "三倍", "D": "五倍"}, "answer": "B", "explanation": "【100年土地法規題目解析 · 官方答案：B】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 7, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "作農業使用之農業用地,移轉與自然人時,得申請不課徵土地增值稅。主管稽徵 機關核准不課徵土地增值稅之農業用地後,應於核准後多久時間內,將有關資料 送直轄市、縣(市)農業主管機關?", "options": {"A": "一個月", "B": "二個月", "C": "三個月", "D": "六個月"}, "answer": "A", "explanation": "【100年土地法規題目解析 · 官方答案：A】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 8, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "依土地稅法規定,地方政府核定應徵空地稅之土地,按該宗土地應納地價稅基本 稅額加徵多少之空地稅?", "options": {"A": "一倍至三倍", "B": "二倍至五倍", "C": "三倍至五倍", "D": "五倍至十倍"}, "answer": "B", "explanation": "【100年土地法規題目解析 · 官方答案：B】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 9, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "依契稅條例規定,占有契稅為其契價多少百分比?", "options": {"A": "百分之二", "B": "百分之四", "C": "百分之六", "D": "百分之八"}, "answer": "C", "explanation": "【100年土地法規題目解析 · 官方答案：C】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 10, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "依房屋稅條例規定,私有房屋有下列何種情形,免徵房屋稅?", "options": {"A": "政府平價配售之平民住宅", "B": "司法保護事業所有之房屋", "C": "合法登記之工廠供直接生產使用之自有房屋", "D": "受重大災害,毀損面積佔整棟面積三成以上不及五成之房屋"}, "answer": "B", "explanation": "【100年土地法規題目解析 · 官方答案：B】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 11, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "依土地徵收條例規定,建築改良物徵收當時之補償費,按下列何種價格估定之?", "options": {"A": "重置價格", "B": "重建價格", "C": "重定價格", "D": "重購價格"}, "answer": "B", "explanation": "【100年土地法規題目解析 · 官方答案：B】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 12, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "下列何者非為土地徵收時依法應進行之程序?", "options": {"A": "協議價購", "B": "舉辦公聽會", "C": "舉辦聽證會", "D": "舉辦說明會"}, "answer": "C", "explanation": "【100年土地法規題目解析 · 官方答案：C】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 13, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "依土地徵收條例規定,有關徵收補償標準之描述,下列何者錯誤?", "options": {"A": "建築改良物,按徵收當時該建築改良物之重建價格估定之", "B": "農作改良物之補償費,按徵收當時該農作改良物之成本估定", "C": "被徵收之土地,按照徵收當期之公告土地現值,補償其地價,必要時得加成 補償", "D": "公共設施保留地,按毗鄰非公共設施保留地之平均公告土地現值補償"}, "answer": "B", "explanation": "【100年土地法規題目解析 · 官方答案：B】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 14, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "同一土地有二以上需用土地人申請徵收時,其核定原則為:", "options": {"A": "以其申請書之安置計畫妥善性為核定原則", "B": "以其申請之單位層級為核定原則", "C": "以興辦事業性質之輕重為核定原則", "D": "以興辦事業規模之大小為核定原則"}, "answer": "C", "explanation": "【100年土地法規題目解析 · 官方答案：C】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 15, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "依平均地權條例規定,出租耕地經依法終止租約,實際收回耕地屆滿多久後,不 依照使用計畫建築使用者,直轄市或縣(市)政府得照價收買之?", "options": {"A": "一年", "B": "六個月", "C": "三個月", "D": "一個月"}, "answer": "A", "explanation": "【100年土地法規題目解析 · 官方答案：A】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 16, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "依平均地權條例規定,下列何種方式取得之土地公開出售時,須受土地法第二十 五條之限制?", "options": {"A": "徵收", "B": "區段徵收", "C": "土地重劃", "D": "照價收買"}, "answer": "A", "explanation": "【100年土地法規題目解析 · 官方答案：A】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 17, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "依平均地權條例之規定,重劃地區選定後,政府得公告禁止區內土地移轉,其禁 止期間最長不得超過:", "options": {"A": "六個月", "B": "一年六個月", "C": "二年六個月", "D": "三年六個月"}, "answer": "B", "explanation": "【100年土地法規題目解析 · 官方答案：B】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 18, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "依平均地權條例規定,下列何種情形取得土地所需之資金,得由中央或直轄市主 管機關發行土地債劵?", "options": {"A": "一般徵收", "B": "市地重劃", "C": "權利變換", "D": "區段徵收"}, "answer": "D", "explanation": "【100年土地法規題目解析 · 官方答案：D】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 19, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "依平均地權條例之規定,自辦市地重劃之獎勵事項不包括:", "options": {"A": "給予低利之重劃貸款", "B": "優先辦理公有土地之撥用", "C": "免收或減收地籍整理規費", "D": "免徵或減徵地價稅與田賦"}, "answer": "B", "explanation": "【100年土地法規題目解析 · 官方答案：B】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 20, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "依平均地權條例之規定,市地重劃後,重行分配與原土地所有權人之土地,自何 時起視為其原有之土地?", "options": {"A": "市地重劃核定之日", "B": "分配結果確定之日", "C": "地籍整理完成之日", "D": "土地權利登記之日"}, "answer": "B", "explanation": "【100年土地法規題目解析 · 官方答案：B】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 21, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "依區域計畫法之規定,違反非都市土地之使用管制而使用土地者,處多少元之罰 鍰?", "options": {"A": "新臺幣三萬元以上十五萬元以下", "B": "新臺幣五萬元以上二十五萬元以下", "C": "新臺幣六萬元以上三十萬元以下", "D": "新臺幣七萬元以上三十五萬元以下"}, "answer": "C", "explanation": "【100年土地法規題目解析 · 官方答案：C】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 22, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "依區域計畫法規定,區域計畫核定後,擬定計畫之機關應於接到核定公文之日起 幾日內公告實施,並將計畫圖說發交各有關地方政府及鄉、鎮(市)公所分別公 開展示?", "options": {"A": "四十日", "B": "五十日", "C": "六十日", "D": "七十日"}, "answer": "A", "explanation": "【100年土地法規題目解析 · 官方答案：A】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 23, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "下列何者為都市計畫法規定細部計畫書及細部計畫圖應表明事項?", "options": {"A": "居住密度及容納人口", "B": "主要道路及其他公眾運輸系統", "C": "住宅、商業、工業及其他土地使用配置", "D": "學校用地、大型公園、批發市場之公共設施用地"}, "answer": "A", "explanation": "【100年土地法規題目解析 · 官方答案：A】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 24, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "有關都市計畫公共設施保留地之使用及稅賦,下列何者有誤?", "options": {"A": "不得為妨礙其指定目的之使用", "B": "未取得前,得申請為臨時建築使用", "C": "一般非住宅使用依基本稅率課徵地價稅", "D": "未作任何使用並與使用中之土地隔離者,免徵地價稅"}, "answer": "C", "explanation": "【100年土地法規題目解析 · 官方答案：C】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 25, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "依都市計畫法之規定,市鎮計畫應先擬定主要計畫書,其表明之事項不包括:", "options": {"A": "人口成長、分布、組成", "B": "土地使用分區管制內容", "C": "住宅及其他土地使用之配置", "D": "主要道路及其他公眾運輸系統"}, "answer": "B", "explanation": "【100年土地法規題目解析 · 官方答案：B】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 26, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "依非都市土地使用管制規則規定,申請變更編定為遊憩用地者,申請人應依其事 業計畫設置必要之保育綠地及公共設施;其設置之保育綠地不得少於變更編定面 積之比例為何?", "options": {"A": "百分之五", "B": "百分之十", "C": "百分之二十", "D": "百分之三十"}, "answer": "D", "explanation": "【100年土地法規題目解析 · 官方答案：D】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 27, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "依非都市土地使用管制規則,申請開發遊憩設施之土地面積達幾公頃以上,應變 更為特定專用區?", "options": {"A": "一公頃", "B": "二公頃", "C": "三公頃", "D": "五公頃"}, "answer": "D", "explanation": "【100年土地法規題目解析 · 官方答案：D】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 28, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "依據非都市土地之變更編定原則,使用分區為鄉村區之土地,可以變更編定為何 種使用地?", "options": {"A": "甲種建築用地", "B": "乙種建築用地", "C": "丙種建築用地", "D": "丁種建築用地"}, "answer": "B", "explanation": "【100年土地法規題目解析 · 官方答案：B】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 29, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "有關非都市土地容積率最高上限規定,下列何者有誤?", "options": {"A": "甲種建築用地:容積率百分之二百四十", "B": "乙種建築用地:容積率百分之二百四十", "C": "丁種建築用地:容積率百分之三百", "D": "特定目的事業用地:容積率百分之一百二十"}, "answer": "D", "explanation": "【100年土地法規題目解析 · 官方答案：D】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 30, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "下列何者可移轉(不包括繼承)、設定負擔或租賃於外國人?", "options": {"A": "林地", "B": "漁地", "C": "牧地", "D": "鹽地"}, "answer": "C", "explanation": "【100年土地法規題目解析 · 官方答案：C】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 31, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "依房屋稅條例規定,主管稽徵機關應依據不動產評價委員會評定之標準,核計房 屋現值。依前項規定核計之房屋現值,主管稽徵機關應通知納稅義務人。納稅義 務人如有異議,得於接到通知書之日起幾日內,檢附證件,申請重行核計?", "options": {"A": "五日", "B": "十日", "C": "十五日", "D": "三十日"}, "answer": "D", "explanation": "【100年土地法規題目解析 · 官方答案：D】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 32, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "依土地法規定,下列何種登記應繳納登記費?", "options": {"A": "限制登記", "B": "塗銷登記", "C": "土地重劃變更登記", "D": "繼承登記"}, "answer": "D", "explanation": "【100年土地法規題目解析 · 官方答案：D】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 33, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "依土地法規定,繼承登記逾期仍未聲請者,得由地政機關予以列冊管理多久?", "options": {"A": "五年", "B": "十年", "C": "十五年", "D": "二十年"}, "answer": "C", "explanation": "【100年土地法規題目解析 · 官方答案：C】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 34, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "城市地方,應由政府建築相當數量之準備房屋,供人民承租自住之用。依土地法 規定,政府準備房屋之租金,以不超過土地及其建築物價額年息多少為限?", "options": {"A": "百分之八", "B": "百分之十", "C": "百分之十二", "D": "百分之十五"}, "answer": "A", "explanation": "【100年土地法規題目解析 · 官方答案：A】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 35, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "土地法將土地依其使用分為四類,其中第三類為交通水利用地,下列何者非屬交 通水利用地項目?", "options": {"A": "溝渠", "B": "池塘", "C": "湖泊", "D": "堤堰"}, "answer": "B", "explanation": "【100年土地法規題目解析 · 官方答案：B】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 36, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "下列何者非屬土地法規定出租人得將出租建築房屋基地收回之情形?", "options": {"A": "契約年限屆滿時", "B": "承租人轉租基地於他人時", "C": "承租人以基地供違反法令之使用時", "D": "承租人積欠租金額,除以擔保現金抵償外,達二個月以上時"}, "answer": "D", "explanation": "【100年土地法規題目解析 · 官方答案：D】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 37, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "依土地法之規定,申請為土地權利變更登記,應由權利人按申報地價或權利價值 多少繳納登記費?", "options": {"A": "千分之一", "B": "千分之二", "C": "千分之三", "D": "千分之五"}, "answer": "A", "explanation": "【100年土地法規題目解析 · 官方答案：A】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 38, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "土地法所定義公有土地與國有土地兩者意涵範圍之關係為何?", "options": {"A": "公有土地小於國有土地", "B": "公有土地等於國有土地", "C": "公有土地大於國有土地", "D": "公有土地與國有土地無關係"}, "answer": "C", "explanation": "【100年土地法規題目解析 · 官方答案：C】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 39, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "下列之優先購買權,何者僅具有債權效力?", "options": {"A": "租地建屋者出賣房屋時,基地所有權人之優先購買權", "B": "出租人出賣耕地時,承租人之優先購買權", "C": "基地所有權人出賣基地時,地上權人、典權人之優先購買權", "D": "共有人出賣其應有部分時,他共有人之優先購買權"}, "answer": "D", "explanation": "【100年土地法規題目解析 · 官方答案：D】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}, {"id": 40, "year": "100年", "subject": "土地法與土地相關稅法概要", "question": "依法得分割之共有土地或建築改良物,共有人不能自行協議分割者,任何共有人 得申請該管直轄市、縣(市)地政機關調處。不服調處者,應於接到調處通知 後幾日內向司法機關訴請處理?", "options": {"A": "十五日", "B": "二十日", "C": "二十五日", "D": "三十日"}, "answer": "A", "explanation": "【100年土地法規題目解析 · 官方答案：A】本題測驗土地法、平均地權條例或土地稅法相關重要考點，請對照條文要件核實正確選項。"}], "不動產估價概要": [{"id": 1, "year": "100年", "subject": "不動產估價概要", "question": "政策宣示不動產交易將採實價登錄,此於不動產估價中屬於影響價格的何種因素?", "options": {"A": "特殊因素", "B": "個別因素", "C": "區域因素", "D": "一般因素"}, "answer": "D", "explanation": "【100年不動產估價題目解析 · 官方答案：D】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 2, "year": "100年", "subject": "不動產估價概要", "question": "飛航管制對於建築高度之限制,此於不動產估價中屬於價格的何種因素?", "options": {"A": "特殊因素", "B": "個別因素", "C": "區域因素", "D": "一般因素"}, "answer": "C", "explanation": "【100年不動產估價題目解析 · 官方答案：C】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 3, "year": "100年", "subject": "不動產估價概要", "question": "不動產座北朝南,此於不動產估價中屬於影響價格的何種因素?", "options": {"A": "特殊因素", "B": "個別因素", "C": "區域因素", "D": "一般因素"}, "answer": "B", "explanation": "【100年不動產估價題目解析 · 官方答案：B】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 4, "year": "100年", "subject": "不動產估價概要", "question": "下列因素那些屬於影響地價之一般因素?○1 利 率 ○2 位 置 ○3 道路寬度 ○4 土地形狀 ○5 土地政策", "options": {"A": "○1 ○3", "B": "○2 ○4", "C": "○1 ○5", "D": "○1 ○2 ○3 ○4 ○5"}, "answer": "C", "explanation": "【100年不動產估價題目解析 · 官方答案：C】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 5, "year": "100年", "subject": "不動產估價概要", "question": "勘估標的距離捷運車站之遠近為下列何種影響因素?", "options": {"A": "區域因素", "B": "個別因素", "C": "特別因素", "D": "一般因素"}, "answer": "B", "explanation": "【100年不動產估價題目解析 · 官方答案：B】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 6, "year": "100年", "subject": "不動產估價概要", "question": "公寓新增電梯設備,提高了該棟建物之價值,屬於:", "options": {"A": "貢獻原則", "B": "外部性原則", "C": "預測原則", "D": "適合原則"}, "answer": "A", "explanation": "【100年不動產估價題目解析 · 官方答案：A】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 7, "year": "100年", "subject": "不動產估價概要", "question": "下列何者為成本法重置成本之成立依據?", "options": {"A": "最有效使用原則", "B": "競爭原則", "C": "替代原則", "D": "均衡原則"}, "answer": "C", "explanation": "【100年不動產估價題目解析 · 官方答案：C】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 8, "year": "100年", "subject": "不動產估價概要", "question": "不動產之特性與其外部環境達成協調一致,是為何種原則?", "options": {"A": "外部性原則", "B": "適合原則", "C": "貢獻原則", "D": "最有效原則"}, "answer": "B", "explanation": "【100年不動產估價題目解析 · 官方答案：B】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 9, "year": "100年", "subject": "不動產估價概要", "question": "不動產估價之價格種類,包括下列那些?○1 一般價格 ○2 正常價格 ○3 限定價格 ○4 特定價格 ○5 特別價格", "options": {"A": "○2 ○3 ○4", "B": "○1 ○2 ○3 ○4", "C": "○1 ○3 ○4 ○5", "D": "○2 ○3 ○4 ○5"}, "answer": "A", "explanation": "【100年不動產估價題目解析 · 官方答案：A】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 10, "year": "100年", "subject": "不動產估價概要", "question": "下列何者屬於限定價格?○1 租賃權與租賃地合併之買賣 ○2 企業資產重估 ○3 違反經濟合理性之不動產分割買賣 ○ 4 學校或公益使用之不動產估價", "options": {"A": "○1 ○3", "B": "○1 ○2 ○3", "C": "○1 ○3 ○4", "D": "○1 ○2 ○3 ○4"}, "answer": "A", "explanation": "【100年不動產估價題目解析 · 官方答案：A】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 11, "year": "100年", "subject": "不動產估價概要", "question": "運用成本法進行不動產估價,下列何者不需納入計算?", "options": {"A": "土地總成本", "B": "建物總成本", "C": "建物累積折舊額", "D": "土地增值"}, "answer": "D", "explanation": "【100年不動產估價題目解析 · 官方答案：D】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 12, "year": "100年", "subject": "不動產估價概要", "question": "依不動產估價技術規則之規定,計算建物折舊額時以何種年數為主?", "options": {"A": "物理耐用年數", "B": "經濟耐用年數", "C": "資本使用年數", "D": "調整耐用年數"}, "answer": "B", "explanation": "【100年不動產估價題目解析 · 官方答案：B】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 13, "year": "100年", "subject": "不動產估價概要", "question": "雙併公寓同層打通之住宅,其市場出售價格應以何種價格評估?", "options": {"A": "正常價格", "B": "特定價格", "C": "限定價格", "D": "特殊價格 ※ 如已住一戶再購買旁互打通,則有可能屬限定價格"}, "answer": "A", "explanation": "【100年不動產估價題目解析 · 官方答案：A】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 14, "year": "100年", "subject": "不動產估價概要", "question": "計量模型分析法為何種估價方法之應用?", "options": {"A": "成 本 法", "B": "原 價 法", "C": "比 較 法", "D": "收益法"}, "answer": "C", "explanation": "【100年不動產估價題目解析 · 官方答案：C】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 15, "year": "100年", "subject": "不動產估價概要", "question": "林君將其所有不動產賣給女兒,成交價格為 2,000 萬元,經判斷此一價格較正常價格便宜 2 成。請問在其他條件不變 下,該不動產之正常價格為多少?", "options": {"A": "1 , 6 0 0萬 元", "B": "1 , 6 6 6萬 元", "C": "2 , 4 0 0萬 元", "D": "2 , 500 萬元"}, "answer": "D", "explanation": "【100年不動產估價題目解析 · 官方答案：D】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 16, "year": "100年", "subject": "不動產估價概要", "question": "依不動產估價技術規則規定,以成本法推估建物折舊前之價格時,以求取何種成本為原則?", "options": {"A": "重製成本", "B": "重置成本", "C": "重建 成 本", "D": "營造成本"}, "answer": "C", "explanation": "【100年不動產估價題目解析 · 官方答案：C】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 17, "year": "100年", "subject": "不動產估價概要", "question": "因接近行動電話基地臺而引起之價值減損,屬於下列何種因素?", "options": {"A": "物理的因素", "B": "功能的因素", "C": "特殊的因素", "D": "經濟的因素"}, "answer": "D", "explanation": "【100年不動產估價題目解析 · 官方答案：D】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 18, "year": "100年", "subject": "不動產估價概要", "question": "下列何者不屬於營造或施工費應考量之項目?", "options": {"A": "銷 售 費", "B": "稅 捐", "C": "資本 利 息", "D": "利 潤"}, "answer": "A", "explanation": "【100年不動產估價題目解析 · 官方答案：A】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 19, "year": "100年", "subject": "不動產估價概要", "question": "下列有關比較法之敘述,何者正確?", "options": {"A": "經檢討後試算價格之間差距 15%以下者,應排除該試算價格之適用", "B": "進行個別因素調整時,任一單獨項目之價格調整率大於 20%時,不應排除比較標的之適用", "C": "進行區域因素調整時,任一單獨項目之價格調整率大於 30%時,不應排除比較標的之適用", "D": "經檢討後試算價格之間差距達 20%以上者,應排除該試算價格之適用"}, "answer": "D", "explanation": "【100年不動產估價題目解析 · 官方答案：D】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 20, "year": "100年", "subject": "不動產估價概要", "question": "有一土地平均每年之淨收益為 50 萬元整,而土地的資本化率皆為年利率 5%,請問該土地之價格?", "options": {"A": "2 , 1 0 0萬 元", "B": "9 0 0萬 元", "C": "1 , 0 0 0萬 元", "D": "1 , 8 0 0萬 元"}, "answer": "C", "explanation": "【100年不動產估價題目解析 · 官方答案：C】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 21, "year": "100年", "subject": "不動產估價概要", "question": "下列那些價格不宜直接視為正常交易價格,於無法掌握調整時,應不予採用。○1 親友間之買賣○2 法院拍賣○3賣 方 支付土地增值稅之交易○4 期待變更之價格", "options": {"A": "○1 ○2 ○3", "B": "○1 ○2 ○4", "C": "○2 ○3 ○4", "D": "○1 ○2 ○3 ○4"}, "answer": "B", "explanation": "【100年不動產估價題目解析 · 官方答案：B】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 22, "year": "100年", "subject": "不動產估價概要", "question": "勘估標的與比較標的若因樓層之不同,而有 100 萬元的價格調整。此調整屬於下列何種方法之運用?", "options": {"A": "差 額 法", "B": "定 額 法", "C": "定 率 法", "D": "百分率法"}, "answer": "A", "explanation": "【100年不動產估價題目解析 · 官方答案：A】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 23, "year": "100年", "subject": "不動產估價概要", "question": "某店面每月租金 8 萬元,押金為 3 個月租金額,銀行定存年利率 3%,空置損失約占總收入之 8%,該不動產之有效 總收入為:", "options": {"A": "8 8 . 9 8萬 元 / 年", "B": "9 6萬 元 / 年", "C": "9 6 . 7 2萬 元 / 年", "D": "1 2 0萬 元 /年"}, "answer": "A", "explanation": "【100年不動產估價題目解析 · 官方答案：A】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 24, "year": "100年", "subject": "不動產估價概要", "question": "某一不動產之土地價格為 600 萬元,建築物價格為 400 萬元,已知土地之個別資本化率為 5%,建築物之個別資本化 率為 8%,請問該不動產之综何資本化率為:", "options": {"A": "1 3 %", "B": "3 %", "C": "6 . 2 %", "D": "7.2%"}, "answer": "C", "explanation": "【100年不動產估價題目解析 · 官方答案：C】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 25, "year": "100年", "subject": "不動產估價概要", "question": "下列何者不宜列入收益法中總費用之項目?", "options": {"A": "地 租", "B": "貸 款 利 息", "C": "保 險 費", "D": "維修費"}, "answer": "B", "explanation": "【100年不動產估價題目解析 · 官方答案：B】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 26, "year": "100年", "subject": "不動產估價概要", "question": "依不動產估價技術規則之規定,下列何者非以比較法估價為原則?", "options": {"A": "公共設施保留地", "B": "池沼", "C": "建 物", "D": "墓 地"}, "answer": "C", "explanation": "【100年不動產估價題目解析 · 官方答案：C】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 27, "year": "100年", "subject": "不動產估價概要", "question": "對具永續性固定收益之土地,以直接資本化法評估其價值,如於第 0 年年初評得其價值為 A、第 5 年年初評得其價 值為 B,則兩者關係如何?", "options": {"A": "A > B", "B": "A = B", "C": "A < B", "D": "不 一定 ※ 本題如敘明收益資本化率亦不變,方可確定 A=B。"}, "answer": "B", "explanation": "【100年不動產估價題目解析 · 官方答案：B】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 28, "year": "100年", "subject": "不動產估價概要", "question": "直接資本化法之資本化率未下列何者間關係?", "options": {"A": "自有資金與貸款額", "B": "有 效收益與價值", "C": "毛收益與價值", "D": "淨 收益與價值"}, "answer": "D", "explanation": "【100年不動產估價題目解析 · 官方答案：D】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 29, "year": "100年", "subject": "不動產估價概要", "question": "都市更新權利變換後區分所有建物及其土地應有部分應考量之因素,應以何種價格查估之?", "options": {"A": "估價當時之新成屋價格", "B": "評 價基準日當時之新成屋價格", "C": "估價當時之預售屋價格", "D": "評 價基準日當時之預售屋價格"}, "answer": "B", "explanation": "【100年不動產估價題目解析 · 官方答案：B】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 30, "year": "100年", "subject": "不動產估價概要", "question": "不動產估價報告中常表明評估價格適用的有效期間,此係下列何種原則的具體考量?", "options": {"A": "替代原則", "B": "競 爭 原 則", "C": "最有效使用原則", "D": "變動原則"}, "answer": "D", "explanation": "【100年不動產估價題目解析 · 官方答案：D】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 31, "year": "100年", "subject": "不動產估價概要", "question": "英用直接資本化法推算不動產淨收益時 , 下列哪些項目不應列入費用項? ○1 .地價稅及房屋稅○2 房屋貸款的利息 ○3 改 良性資本支出 ○4 土地增值稅 ○5 租金收入所產生的所得稅", "options": {"A": "○2 ○3 ○5", "B": "○3 ○4 ○5", "C": "○2 ○3 ○4 ○5", "D": "○1 ○2 ○3 ○4 ○5"}, "answer": "C", "explanation": "【100年不動產估價題目解析 · 官方答案：C】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 32, "year": "100年", "subject": "不動產估價概要", "question": "不動產估價技術規則規定:「建物已不具備使用價值,將其基地視為素地估價」,此為:", "options": {"A": "部分估價", "B": "獨立估價", "C": "限制估價", "D": "特殊估價"}, "answer": "B", "explanation": "【100年不動產估價題目解析 · 官方答案：B】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 33, "year": "100年", "subject": "不動產估價概要", "question": "不動產於市場上已最有效利用方式利用所能產生的收益,稱為", "options": {"A": "支付租金", "B": "實 質 租 金", "C": "差額租金", "D": "經濟租金"}, "answer": "D", "explanation": "【100年不動產估價題目解析 · 官方答案：D】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 34, "year": "100年", "subject": "不動產估價概要", "question": "樓層別效用比係以何種學說為基礎?", "options": {"A": "土地與建物聯合貢獻說", "B": "土地貢獻說", "C": "建物貢獻說", "D": "最有效使用原則"}, "answer": "A", "explanation": "【100年不動產估價題目解析 · 官方答案：A】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 35, "year": "100年", "subject": "不動產估價概要", "question": "有一棟公寓其平均樓層別效用比為 124%,全棟建物成本占全棟房地總價格之 60%,1 樓之樓層別效用比為 150%1 樓 之地價分配率為:", "options": {"A": "7 4 . 4 %", "B": "7 5 . 6 %", "C": "159%", "D": "150%"}, "answer": "B", "explanation": "【100年不動產估價題目解析 · 官方答案：B】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 36, "year": "100年", "subject": "不動產估價概要", "question": "應用直接資本化法估價時,已知獲利率為 5%、收益年增率為 2%,直接資本化率應採下列何者較佳?", "options": {"A": "7 %", "B": "5 %", "C": "3 %", "D": "2 %"}, "answer": "C", "explanation": "【100年不動產估價題目解析 · 官方答案：C】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 37, "year": "100年", "subject": "不動產估價概要", "question": "以差額租金還原法所得出之價格為:", "options": {"A": "所有權價格", "B": "經濟 租 金", "C": "實質租金", "D": "租貸權價格"}, "answer": "D", "explanation": "【100年不動產估價題目解析 · 官方答案：D】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 38, "year": "100年", "subject": "不動產估價概要", "question": "兩宗土地合併後整體利用,合併後價格為 1,000 萬元,其合併前價格分別為 300 萬元及 500 萬元,則對於原來 500 萬 元之土地,其合併後價格應為:", "options": {"A": "6 0 0萬 元", "B": "7 0 0萬 元", "C": "6 2 5萬 元", "D": "4 2 5萬 元"}, "answer": "C", "explanation": "【100年不動產估價題目解析 · 官方答案：C】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 39, "year": "100年", "subject": "不動產估價概要", "question": "林乙向王甲承租房屋,每月支付的實質租金為 10,000,這棟房屋如於市場上重新出租,合理租金為 16,000 元。假設 王甲、林乙對該租金增加的貢獻各半,請問於王甲考慮續約的情況下,其合理的租金應該調整為多少?", "options": {"A": "1 0 , 0 0 0元", "B": "1 3 , 0 0 0元", "C": "1 6 , 0 0 0元", "D": "1 9 ,000 元"}, "answer": "B", "explanation": "【100年不動產估價題目解析 · 官方答案：B】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}, {"id": 40, "year": "100年", "subject": "不動產估價概要", "question": "依不動產估價技術規則規定,承租人每其支付予出租人之租金,加計押金或保證金、權利金及其他相關運用之總數, 稱 為 ?", "options": {"A": "純 租 金", "B": "支付租金", "C": "實 質 租 金", "D": "經濟租金"}, "answer": "C", "explanation": "【100年不動產估價題目解析 · 官方答案：C】本題測驗不動產估價技術規則及三大估價方法核心公式與原則，請詳閱標準定義以釐清觀念。"}], "不動產經紀相關法規概要": [{"id": 1, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "公寓大廈規約不得約定下列何種事項?", "options": {"A": "主任委員職務之執行權限", "B": "住戶違反義務之處理方式", "C": "停車場使用管理辦法", "D": "專有部分之出售限制"}, "answer": "D", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：D】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 2, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "公寓大廈建築物所有權登記之區分所有權人數及其區分所有權比例在多少以上, 起造人應於三個月內召開區分所有權人會議,成立管理委員會?", "options": {"A": "五分之一、五分之一", "B": "二分之一、二分之一", "C": "三分之一、三分之二", "D": "三分之二、四分之三"}, "answer": "B", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：B】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 3, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "對於一樓住戶在公寓大廈一樓外牆面改建增設鐵門,除應依法令規定之外,得依 何種程序方式另為限制?", "options": {"A": "管理委員會主任委員之同意", "B": "管理委員會會議決議", "C": "區分所有權人會議決議", "D": "區分所有權人之半數同意"}, "answer": "C", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：C】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 4, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "公寓大廈共用部分設施之拆除,應經下列何者程序始得為之?", "options": {"A": "管理委員會會議決議", "B": "區分所有權人會議決議", "C": "區分所有權人與管理委員會之協議", "D": "管理委員會與住戶之協議"}, "answer": "B", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：B】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 5, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "依公寓大廈管理條例規定,規約除應載明專有部分及共用部分範圍外,非經載明 於規約者,不生效力。下列何者非屬於此規定之事項?", "options": {"A": "禁止住戶飼養動物之特別約定", "B": "違反義務之處理方式", "C": "禁止從事宗教活動之特別約定", "D": "財務運作之監督規定"}, "answer": "C", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：C】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 6, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "依公寓大廈管理條例規定,下列對於供作共同使用部分之法定停車空間的敘述, 何者是錯誤的?", "options": {"A": "建商不得將未售出之停車空間,出租予區分所有權人以外之人", "B": "建商不得單獨將停車空間售予未購買主建物之人", "C": "區分所有權人不得分別單獨出售主建物或停車空間", "D": "區分所有權人得單獨將停車空間售予同棟建築物之其他區分所有權人"}, "answer": "A", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：A】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 7, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "依公寓大廈管理條例規定,何者不得與其所屬建築物共用部分之應有部分及其基 地所有權或地上權之應有部分分離而為移轉或設定負擔?", "options": {"A": "停車位", "B": "約定專用部分", "C": "專有部分", "D": "約定共用部分"}, "answer": "C", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：C】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 8, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "區分所有權人未依區分所有權人會議決議繳納公共基金時,主管機關依公寓大廈 管理條例最高可處新臺幣多少元之罰鍰?", "options": {"A": "五萬元", "B": "十萬元", "C": "二十萬元", "D": "三十萬元"}, "answer": "C", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：C】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 9, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "公寓大廈之起造人或區分所有權人應依使用執照所記載之用途及測繪規定,辦理 何種登記?", "options": {"A": "建物所有權第一次登記", "B": "土地總登記", "C": "所有權變更登記", "D": "管理者變更登記"}, "answer": "A", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：A】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 10, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "法院判決區分所有權人出讓區分所有權及基地所有權應有部分確定,經管理委員 會聲請法院拍賣之所得,除其他法律另有規定外,依公寓大廈管理條例規定,其 所積欠應分擔之費用的受償順序如何?", "options": {"A": "與普通抵押權同等順位", "B": "與一般債權同等順位", "C": "與最高限額抵押權同等順位", "D": "與第一順位抵押權同等順位"}, "answer": "D", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：D】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 11, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "區分所有權人會議應作成會議紀錄,載明開會經過及決議事項,由主席簽名,於 會後最長幾日內送達各區分所有權人並公告之?", "options": {"A": "十日", "B": "十五日", "C": "二十日", "D": "三十日"}, "answer": "B", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：B】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 12, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "不動產經紀業受託銷售不動產,未製作不動產說明書即促成雙方當事人簽訂買賣 契約,主管機關可處以多少新臺幣之罰鍰?", "options": {"A": "三萬元以上十五萬元以下", "B": "二萬元以上二十萬元以下", "C": "六萬元以上三十萬元以下", "D": "五萬元以上五十萬元以下"}, "answer": "C", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：C】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 13, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "不動產經紀業分設營業處所時,應於設立後最長幾日內,以書面將相關事項向主 管機關申請備查?", "options": {"A": "十日", "B": "十五日", "C": "二十日", "D": "三十日"}, "answer": "D", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：D】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 14, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "經紀業分設之營業處所裁撤時,最長應於裁撤後幾日內,以書面向經紀業所在地 直轄市或縣(市)主管機關申請備查?", "options": {"A": "十日", "B": "二十日", "C": "三十日", "D": "四十日"}, "answer": "C", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：C】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 15, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "經紀業與委託人簽訂委託契約書後,方得刊登廣告及銷售,違反規定者應作何處 罰?", "options": {"A": "處新臺幣三萬元以上十五萬元以下罰鍰", "B": "處新臺幣六萬元以上三十萬元以下罰鍰", "C": "應予三個月以上二年以下之停止執行業務處分", "D": "應予六個月以上三年以下之停止執行業務處分"}, "answer": "B", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：B】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 16, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "非經紀業而經營仲介或代銷業務者,主管機關應禁止其營業,並處公司負責人、 商號負責人或行為人多少金額之罰鍰?", "options": {"A": "新臺幣五萬元以上二十萬元以下", "B": "新臺幣五萬元以上三十萬元以下", "C": "新臺幣十萬元以上四十萬元以下", "D": "新臺幣十萬元以上三十萬元以下"}, "answer": "D", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：D】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 17, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "不動產之買賣、互易、租賃或代理銷售,如委由經紀業仲介或代銷者,下列文件 何者不須由經紀業指派經紀人簽章?", "options": {"A": "工程契約書", "B": "不動產租賃、買賣契約書", "C": "定金收據", "D": "不動產廣告稿"}, "answer": "A", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：A】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 18, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "經紀業應於經紀人到職之日起最長幾日內,造具名冊報請所在地主管機關層報中 央主管機關備查?", "options": {"A": "十日", "B": "十五日", "C": "二十日", "D": "三十日"}, "answer": "B", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：B】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 19, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "依不動產經紀業管理條例規定,下列何者得以申請許可經營不動產經紀業?", "options": {"A": "犯侵占罪而受一年以上有期徒刑宣告確定之緩刑者", "B": "受廢止經紀人員證明或證書之處分未滿一年者", "C": "滿十八歲高中畢業尚未結婚者", "D": "滿二十歲而受法院監護宣告者"}, "answer": "A", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：A】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 20, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "依不動產經紀業管理條例之規定,下列有關不動產經紀人員的義務與責任之敘 述,何者不正確?", "options": {"A": "揭示不動產經紀人證書之義務", "B": "不得收取差價或其他報酬之義務", "C": "保守因執行業務而知悉或持有之他人秘密之義務", "D": "應以不動產說明書向與委託人交易之相對人解說"}, "answer": "A", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：A】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 21, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "依不動產經紀業管理條例規定,因可歸責於不動產經紀業之事由不能履行委託契 約,致委託者受有損害時,該損害賠償責任應由誰負擔?", "options": {"A": "不動產經紀人與經紀業各負擔一半責任", "B": "不動產經紀業", "C": "不動產經紀業與經紀人負連帶賠償責任", "D": "不動產經紀人"}, "answer": "B", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：B】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 22, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "依不動產經紀業管理條例規定,下列關於經紀業之敘述,何者正確?", "options": {"A": "主管機關檢查經紀業之業務時,經紀業得以商業機密之理由拒絕檢查", "B": "經紀業取得主管機關許可,依法辦理公司或商業登記後,即可開始營業", "C": "不動產銷售廣告稿必須經主管機關審查,再由不動產經紀業簽章後刊行", "D": "經營國外不動產仲介業務者,以依法辦理登記之公司型態組織為限"}, "answer": "D", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：D】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 23, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "依不動產經紀業管理條例第6條規定,在某些情形下不得申請經營經紀業,其經 許可者,撤銷或廢止其許可。下列何者不符前述之規定?", "options": {"A": "無行為能力或限制行為能力者", "B": "受破產之宣告尚未復權者", "C": "受感訓處分之裁定確定,尚未執行完畢或執行完畢後未滿五年者", "D": "受本條例第29條之停止營業處分,尚未執行完畢者"}, "answer": "C", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：C】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 24, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "下列何者不屬不動產經紀人證書滅失時,申請補發應檢附之文件?", "options": {"A": "申請書", "B": "身分證明文件影本", "C": "一年以上營業員經驗證明文件及其影本", "D": "不動產經紀人考試及格證書及其影本"}, "answer": "C", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：C】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 25, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "下列關於充任不動產經紀營業員規定之敘述,何者正確?", "options": {"A": "欲取得不動產經紀營業員證明者,其經紀營業員專業訓練合格時數,不得少於二十個小時", "B": "營業員證明有效期限屆滿後欲取得營業員資格,應檢附三十個小時以上訓練證明辦理登錄", "C": "廢止營業員證明滿三年者,即可申請登錄請領營業員證明", "D": "經不動產經紀人考試及格者,即可充任不動產經紀營業員"}, "answer": "B", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：B】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 26, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "下列何者非屬「結合」之定義?", "options": {"A": "直接或間接控制他事業之業務經營或人事任免者", "B": "受讓或承租他事業全部或主要部分之營業或財產者", "C": "與他事業經常共同經營或受他事業委託經營者", "D": "持有或取得他事業之股份或出資額,達到他事業有表決權股份或資本總額四 分之一以上者"}, "answer": "D", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：D】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 27, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "下列事業之經營規模,何者不屬獨占事業之認定範圍?", "options": {"A": "一事業在特定市場之占有率達二分之一", "B": "二事業全體在特定市場之占有率達二分之一", "C": "二事業全體在特定市場之占有率達三分之二", "D": "三事業全體在特定市場之占有率達四分之三"}, "answer": "B", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：B】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 28, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "依消費者保護法之規定,下列敘述何者正確?", "options": {"A": "從事製造商品之企業經營者,就其市場商品符合當時科技水準合理期待的安全性之事實,負 擔舉證責任", "B": "消費者因企業經營者過失所致之損害,依本法向法院提起訴訟者,得請求損害額三倍以下之 懲罰性賠償金", "C": "企業經營者對於消費者因信賴媒體所刊明知或可得而知之不實廣告內容所致之損害,不須負 擔損害賠償責任", "D": "輸入商品之企業經營者,對於因其所輸入之商品而致消費者的健康受有損害時,其應負之責 任為過失責任"}, "answer": "A", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：A】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 29, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "依消費者保護法之規定,未經消費者要約而對之郵寄或投遞之商品,有關消費者 應負義務之敘述,何者正確?", "options": {"A": "消費者應負通知之義務", "B": "消費者不負保管之義務", "C": "消費者應負寄回之義務", "D": "消費者應負檢視之義務"}, "answer": "B", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：B】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 30, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "下列何者不是消費者保護法所定品質保證書應載明之事項?", "options": {"A": "商品之名稱", "B": "製造商地址", "C": "產品責任險金額", "D": "交易日期"}, "answer": "C", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：C】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 31, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "依消費者保護法之規定,下列關於定型化契約之敘述,何者正確?", "options": {"A": "企業經營者與消費者簽訂定型化契約前,皆應有三十日的期間供消費者審閱契約", "B": "主管機關所公告的定型化契約書範本,並不具備法律效力", "C": "企業經營者可在定型化契約中約定免除賠償責任", "D": "違反中央主管機關所公告之定型化契約不得記載事項,其定型化契約無效"}, "answer": "B", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：B】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 32, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "依消費者保護法之規定,下列有關消費爭議處理的敘述,何者錯誤?", "options": {"A": "消費者得向企業經營者提出申訴", "B": "消費爭議之調解程序得不公開", "C": "消費者不得直接向法院提起訴訟", "D": "企業經營者所屬之代表得為消費爭議調解委員"}, "answer": "C", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：C】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 33, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "依公平交易法規定,事業不得為有限制競爭或妨礙公平競爭之虞的情形,下列何 者不屬之?", "options": {"A": "無正當理由,對他事業給予差別待遇之行為", "B": "以公司營利為目的,促使他事業對該特定事業退出市場之行為", "C": "以脅迫、利誘或其他不正當方法,使競爭者之交易相對人與自己交易之行為", "D": "以不正當限制交易相對人之事業活動為條件,而與其交易之行為"}, "answer": "B", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：B】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 34, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "下列關於事業違反公平交易法之規定,以致侵害他人權益之損害賠償的敘述,何 者正確?", "options": {"A": "事業因過失侵害行為而受有利益者,被害人得請求專依該項利益計算損害額", "B": "因事業之故意侵害行為所致之損害,法院得依侵害情形酌定損害額三倍以上之賠償", "C": "事業因故意侵害行為而受有利益者,被害人得請求專依該項利益及利息加倍計算損害額", "D": "因事業之過失行為所致之損害,法院得依侵害情形酌定損害額三倍以上之賠償"}, "answer": "A", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：A】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 35, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "依公平交易法規定,下列有關事業結合的敘述,何者正確?", "options": {"A": "事業結合行為原則上禁止,例外採取申報主義", "B": "主管機關對於受理事業結合申報案件所為延長受理期間之決定,不得附加條件", "C": "事業在中央主管機關受理申報期間,不得為結合行為", "D": "事業申報後,經中央主管機關禁止其結合而結合,處新臺幣五萬元以上五千萬元以下罰鍰"}, "answer": "C", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：C】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 36, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "對於公平交易法所定中央主管機關應附期限許可事業之聯合行為,在許可期限屆 滿前,事業得申請延展,每次最長延展期限不得逾幾年?", "options": {"A": "一年", "B": "三年", "C": "五年", "D": "六年"}, "answer": "B", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：B】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 37, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "甲、乙二電子零件供應銷售業,透過聚餐交換經營意見,雙方合意決定在特定時 點提高電子零件售價。此種行為是:", "options": {"A": "獨占行為", "B": "寡占行為", "C": "結合行為", "D": "聯合行為"}, "answer": "D", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：D】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 38, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "依消費者保護法規定,有關主管機關對於企業經營者興建預售屋商品出售予消費 者所為之行政監督的敘述,下列何者錯誤?", "options": {"A": "建商拒絕、規避主管機關之調查,經直轄市政府、縣(市)政府核准者,得 命停止營業", "B": "主管機關認為確有損害消費者財產之虞者,應命其限期改善或採取其他必要 措施", "C": "主管機關對消費者有發生重大損害之虞而情況危急時,應即在大眾傳播媒體 公告企業經營者之名稱", "D": "主管機關認為有損害消費者財產之虞者,應即進行調查並得公開其經過與結 果 題解:應經中央目的事業主管機關或行政消保會"}, "answer": "A", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：A】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 39, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "依消費者保護法之規定,消費者保護團體以自己之名義提起第50條訴訟,其標的 價額超過多少金額,其超過部分免繳裁判費?", "options": {"A": "新臺幣六十萬元", "B": "新臺幣八十萬元", "C": "新臺幣一百萬元", "D": "新臺幣二百萬元"}, "answer": "A", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：A】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}, {"id": 40, "year": "100年", "subject": "不動產經紀相關法規概要", "question": "政府為達成制定消費者保護法之目的,應就某些事項有關之法規及其執行情形, 定期檢討、協調、改進之,下列何者不屬之?", "options": {"A": "維護商品或服務之品質與安全衛生", "B": "防止商品或服務損害消費者之生命、身體、健康、財產或其他權益", "C": "確保商品或服務之標示,符合法令規定", "D": "促進事業品牌形象或商譽維護"}, "answer": "D", "explanation": "【100年不動產經紀法規題目解析 · 官方答案：D】本題考查公寓大廈管理條例、不動產經紀業管理條例、公平交易法及消保法之法定權利與義務。"}]}};
+
+    // Build selectable pools
+    // 1. All-subjects cross-year mixed
+    // 2. Per-subject cross-year mixed
+    // 3. Single year full exams
+    let currentPoolKey = 'all_mixed';
+    let currentMode = 'exam';
+    let currentQuestions = [];
+    let userAnswers = {};
+    let currentIndex = 0;
+    let timerInterval = null;
+    let timeElapsed = 0;
+    let totalExamTime = 60 * 60;
+
+    const POOL_OPTIONS = [
+      {
+        key: 'all_mixed',
+        name: '🔀 歷年全考科跨年混合抽題 (推薦)',
+        badge: '混合各年份 · 抽25題',
+        meta: '跨 114年 與 100年 之民法、土地法、經紀法規與估價隨機穿插，絕不集中單一年份。'
+      },
+      {
+        key: 'civil_mixed',
+        name: '⚖️ 民法概要 · 跨年度混合',
+        badge: '民法跨年份 · 抽25題',
+        meta: '混合 114年 (25題) 與 100年 (40題) 真題庫，平均抽測 25 題。'
+      },
+      {
+        key: 'land_mixed',
+        name: '🗺️ 土地法與土地稅法 · 跨年度混合',
+        badge: '土地法跨年份 · 抽25題',
+        meta: '混合 114年 (25題) 與 100年 (40題) 土地法真題，平均抽測 25 題。'
+      },
+      {
+        key: 'broker_mixed',
+        name: '📜 不動產經紀相關法規 · 跨年度混合',
+        badge: '經紀法規跨年份 · 抽25題',
+        meta: '混合 114年 與 100年 經紀業條例、公寓大廈、公平法及消保法，抽測 25 題。'
+      },
+      {
+        key: 'valuation_mixed',
+        name: '🏢 不動產估價概要 · 跨年度混合',
+        badge: '估價概要跨年份 · 抽25題',
+        meta: '混合 114年 與 100年 估價技術規則及三大估價法，抽測 25 題。'
+      },
+      {
+        key: 'year_114',
+        name: '📖 114年不動產經紀人 完整模擬',
+        badge: '單一年度 · 抽25題',
+        meta: '自 114年 最新考題全科目題庫中隨機選取 25 題。'
+      },
+      {
+        key: 'year_100',
+        name: '📚 100年不動產經紀人 完整模擬',
+        badge: '單一年度 · 抽25題',
+        meta: '自 100年 歷屆真題庫 (160題) 中隨機選取 25 題進行測驗。'
+      }
+    ];
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderPoolGrid();
+    });
+
+    function renderPoolGrid() {
+      const container = document.getElementById('poolGrid');
+      container.innerHTML = '';
+      POOL_OPTIONS.forEach((item, idx) => {
+        const btn = document.createElement('div');
+        btn.className = `pool-btn ${idx === 0 ? 'selected' : ''}`;
+        btn.onclick = () => selectPool(item.key, btn);
+        btn.innerHTML = `
+          <span class="pool-badge">${item.badge}</span>
+          <div class="pool-name">${item.name}</div>
+          <div class="pool-meta">${item.meta}</div>
+        `;
+        container.appendChild(btn);
+      });
+    }
+
+    function selectPool(key, el) {
+      currentPoolKey = key;
+      document.querySelectorAll('.pool-btn').forEach(b => b.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    // Helper: shuffle array
+    function shuffle(arr) {
+      const array = [...arr];
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    // Generate 25 questions based on selected pool, ensuring mixed years
+    function generate25Questions(poolKey) {
+      let pool114 = [];
+      let pool100 = [];
+
+      const subjMap = {
+        'civil_mixed': '民法概要',
+        'land_mixed': '土地法與土地相關稅法概要',
+        'broker_mixed': '不動產經紀相關法規概要',
+        'valuation_mixed': '不動產估價概要'
+      };
+
+      if (poolKey === 'all_mixed') {
+        // Collect from all subjects for both 114 and 100
+        Object.keys(RAW_EXAM_DATA['114年真題']).forEach(s => {
+          pool114.push(...RAW_EXAM_DATA['114年真題'][s]);
+        });
+        Object.keys(RAW_EXAM_DATA['100年真題']).forEach(s => {
+          pool100.push(...RAW_EXAM_DATA['100年真題'][s]);
+        });
+      } else if (subjMap[poolKey]) {
+        const subjName = subjMap[poolKey];
+        pool114 = [...(RAW_EXAM_DATA['114年真題'][subjName] || [])];
+        pool100 = [...(RAW_EXAM_DATA['100年真題'][subjName] || [])];
+      } else if (poolKey === 'year_114') {
+        Object.keys(RAW_EXAM_DATA['114年真題']).forEach(s => {
+          pool114.push(...RAW_EXAM_DATA['114年真題'][s]);
+        });
+        return shuffle(pool114).slice(0, 25);
+      } else if (poolKey === 'year_100') {
+        Object.keys(RAW_EXAM_DATA['100年真題']).forEach(s => {
+          pool100.push(...RAW_EXAM_DATA['100年真題'][s]);
+        });
+        return shuffle(pool100).slice(0, 25);
+      }
+
+      // Mix across years: pick roughly half from 114 and half from 100
+      const shuffled114 = shuffle(pool114);
+      const shuffled100 = shuffle(pool100);
+
+      // Take 13 from 114 and 12 from 100 (or vice versa)
+      const count114 = Math.min(13, shuffled114.length);
+      const count100 = 25 - count114;
+
+      const pick114 = shuffled114.slice(0, count114);
+      const pick100 = shuffled100.slice(0, count100);
+
+      // Alternate / shuffle so they are interlaced across years
+      const combined = shuffle([...pick114, ...pick100]);
+      return combined;
+    }
+
+    function startQuiz() {
+      const modeRadio = document.querySelector('input[name="quizMode"]:checked');
+      currentMode = modeRadio ? modeRadio.value : 'exam';
+
+      currentQuestions = generate25Questions(currentPoolKey);
+      userAnswers = {};
+      currentIndex = 0;
+      timeElapsed = 0;
+
+      // Update UI for Quiz
+      document.getElementById('screenWelcome').classList.remove('active');
+      document.getElementById('screenQuiz').classList.add('active');
+      document.getElementById('screenResult').classList.remove('active');
+      document.getElementById('headerStats').style.display = 'flex';
+      document.getElementById('sideModeLabel').textContent = currentMode === 'exam' ? '正式測驗' : '練習模式';
+
+      renderMatrix();
+      renderQuestion(0);
+
+      if (timerInterval) clearInterval(timerInterval);
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeElapsed++;
+        if (currentMode === 'exam') {
+          const remain = totalExamTime - timeElapsed;
+          if (remain <= 0) {
+            clearInterval(timerInterval);
+            alert('考試時間結束，系統將自動交卷！');
+            doFinalSubmit();
+            return;
+          }
+        }
+        updateTimerDisplay();
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const timeElem = document.getElementById('timeRemaining');
+      if (currentMode === 'exam') {
+        const remain = Math.max(0, totalExamTime - timeElapsed);
+        const m = String(Math.floor(remain / 60)).padStart(2, '0');
+        const s = String(remain % 60).padStart(2, '0');
+        timeElem.textContent = `${m}:${s}`;
+      } else {
+        const m = String(Math.floor(timeElapsed / 60)).padStart(2, '0');
+        const s = String(timeElapsed % 60).padStart(2, '0');
+        timeElem.textContent = `${m}:${s} (計時)`;
+      }
+    }
+
+    function renderMatrix() {
+      const matrix = document.getElementById('matrixGrid');
+      matrix.innerHTML = '';
+      currentQuestions.forEach((q, idx) => {
+        const cell = document.createElement('div');
+        cell.className = 'matrix-cell';
+        cell.id = `matrix-cell-${idx}`;
+        cell.textContent = idx + 1;
+        cell.onclick = () => jumpToQuestion(idx);
+        matrix.appendChild(cell);
+      });
+      updateMatrixStatus();
+    }
+
+    function updateMatrixStatus() {
+      currentQuestions.forEach((q, idx) => {
+        const cell = document.getElementById(`matrix-cell-${idx}`);
+        if (!cell) return;
+        cell.className = 'matrix-cell';
+        if (userAnswers[idx]) {
+          cell.classList.add('answered');
+        }
+        if (idx === currentIndex) {
+          cell.classList.add('current');
+        }
+      });
+      const answered = Object.keys(userAnswers).length;
+      document.getElementById('answeredCount').textContent = answered;
+    }
+
+    function renderQuestion(idx) {
+      currentIndex = idx;
+      const q = currentQuestions[idx];
+      document.getElementById('currentQIndex').textContent = idx + 1;
+      document.getElementById('qYearTag').textContent = q.year || '歷屆真題';
+      document.getElementById('qSubjectTag').textContent = q.subject || '專業科目';
+      document.getElementById('qQuestionText').textContent = `${idx + 1}. [${q.year}原題號${q.id}] ${q.question}`;
+
+      const optionsList = document.getElementById('qOptionsList');
+      optionsList.innerHTML = '';
+
+      ['A', 'B', 'C', 'D'].forEach(optKey => {
+        const optText = q.options[optKey];
+        const item = document.createElement('div');
+        item.className = 'option-item';
+        if (userAnswers[idx] === optKey) {
+          item.classList.add('selected');
+        }
+
+        if (currentMode === 'practice' && userAnswers[idx]) {
+          if (optKey === q.answer) {
+            item.classList.add('correct');
+          } else if (userAnswers[idx] === optKey) {
+            item.classList.add('wrong');
+          }
+        }
+
+        item.innerHTML = `
+          <div class="option-marker">${optKey}</div>
+          <div class="option-content">${optText}</div>
+        `;
+
+        item.onclick = () => pickOption(idx, optKey);
+        optionsList.appendChild(item);
+      });
+
+      const expBox = document.getElementById('explanationBox');
+      if (currentMode === 'practice' && userAnswers[idx]) {
+        expBox.classList.add('show');
+        document.getElementById('expAnswer').textContent = q.answer;
+        document.getElementById('expAnswer').style.color = (userAnswers[idx] === q.answer) ? 'var(--success)' : 'var(--danger)';
+        document.getElementById('expDetail').textContent = q.explanation || '考選部核定答案。請研讀相關法規。';
+      } else {
+        expBox.classList.remove('show');
+      }
+
+      document.getElementById('prevBtn').disabled = (idx === 0);
+      document.getElementById('prevBtn').style.opacity = (idx === 0) ? '0.5' : '1';
+      document.getElementById('nextBtn').disabled = (idx === currentQuestions.length - 1);
+      document.getElementById('nextBtn').style.opacity = (idx === currentQuestions.length - 1) ? '0.5' : '1';
+
+      updateMatrixStatus();
+    }
+
+    function pickOption(qIdx, optKey) {
+      userAnswers[qIdx] = optKey;
+      renderQuestion(qIdx);
+    }
+
+    function navQuestion(dir) {
+      const newIdx = currentIndex + dir;
+      if (newIdx >= 0 && newIdx < currentQuestions.length) {
+        renderQuestion(newIdx);
+      }
+    }
+
+    function jumpToQuestion(idx) {
+      renderQuestion(idx);
+    }
+
+    function confirmSubmit() {
+      const total = currentQuestions.length;
+      const answered = Object.keys(userAnswers).length;
+      const unanswered = total - answered;
+
+      const note = document.getElementById('modalUnansweredNote');
+      if (unanswered > 0) {
+        note.innerHTML = `您還有 <strong style="color: var(--danger);">${unanswered}</strong> 題尚未作答！確定要現在交卷計算成績嗎？`;
+      } else {
+        note.textContent = '您已完成所有 25 題作答，確定要交卷送出評分嗎？';
+      }
+      document.getElementById('confirmModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('confirmModal').style.display = 'none';
+    }
+
+    function doFinalSubmit() {
+      closeModal();
+      if (timerInterval) clearInterval(timerInterval);
+
+      let correct = 0;
+      currentQuestions.forEach((q, idx) => {
+        if (userAnswers[idx] === q.answer) {
+          correct++;
+        }
+      });
+      const wrong = currentQuestions.length - correct;
+      const score = correct * 2;
+
+      const m = String(Math.floor(timeElapsed / 60)).padStart(2, '0');
+      const s = String(timeElapsed % 60).padStart(2, '0');
+
+      document.getElementById('finalScore').textContent = score;
+      document.getElementById('statCorrect').textContent = correct;
+      document.getElementById('statWrong').textContent = wrong;
+      document.getElementById('statTimeUsed').textContent = `${m}:${s}`;
+
+      const statusElem = document.getElementById('resultStatus');
+      const subtextElem = document.getElementById('resultSubtext');
+      if (score >= 30) {
+        statusElem.className = 'result-status status-pass';
+        statusElem.textContent = '🎉 測驗及格！表現優異';
+        subtextElem.textContent = `25題混合測驗取得 ${score} 分（及格標準30分），答對率 ${(correct / 25 * 100).toFixed(0)}%！`;
+      } else {
+        statusElem.className = 'result-status status-fail';
+        statusElem.textContent = '✍️ 未達及格標準，再接再厲！';
+        subtextElem.textContent = `25題混合測驗得分為 ${score} 分（及格標準30分），請檢閱下方每一題的官方解答與法條理由解析。`;
+      }
+
+      renderReviewList();
+
+      document.getElementById('screenQuiz').classList.remove('active');
+      document.getElementById('screenResult').classList.add('active');
+      document.getElementById('headerStats').style.display = 'none';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderReviewList(filter = 'all') {
+      const container = document.getElementById('reviewList');
+      container.innerHTML = '';
+
+      let wrongCount = 0;
+      let correctCount = 0;
+
+      currentQuestions.forEach((q, idx) => {
+        const userAns = userAnswers[idx];
+        const isCorrect = (userAns === q.answer);
+        if (isCorrect) correctCount++;
+        else wrongCount++;
+
+        if (filter === 'wrong' && isCorrect) return;
+        if (filter === 'correct' && !isCorrect) return;
+
+        const card = document.createElement('div');
+        card.className = `review-item ${isCorrect ? 'correct-border' : 'wrong-border'}`;
+
+        let optsHtml = '';
+        ['A', 'B', 'C', 'D'].forEach(opt => {
+          let style = 'padding: 8px 12px; border-radius: 8px; margin: 4px 0; display: flex; gap: 8px; font-size: 0.95rem;';
+          let badge = '';
+          if (opt === q.answer) {
+            style += 'background: #dcfce7; color: #166534; font-weight: 600; border: 1px solid #86efac;';
+            badge = ' <span style="font-size: 0.75rem; background: #16a34a; color: white; padding: 2px 8px; border-radius: 4px; margin-left: auto;">標準解答</span>';
+          } else if (userAns === opt && !isCorrect) {
+            style += 'background: #fee2e2; color: #991b1b; font-weight: 600; border: 1px solid #fca5a5;';
+            badge = ' <span style="font-size: 0.75rem; background: #dc2626; color: white; padding: 2px 8px; border-radius: 4px; margin-left: auto;">您的作答</span>';
+          } else {
+            style += 'background: #f8fafc; color: #475569; border: 1px solid transparent;';
+          }
+
+          optsHtml += `
+            <div style="${style}">
+              <strong>(${opt})</strong>
+              <div style="flex:1;">${q.options[opt]}</div>
+              ${badge}
+            </div>
+          `;
+        });
+
+        card.innerHTML = `
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+            <div>
+              <span style="font-weight: 700; color: #1e3a8a; font-size: 1.05rem;">第 ${idx + 1} 題</span>
+              <span style="font-size: 0.8rem; background: #f3e8ff; color: #6b21a8; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-left: 6px;">${q.year}</span>
+              <span style="font-size: 0.8rem; background: #eff6ff; color: #1d4ed8; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-left: 4px;">${q.subject}</span>
+            </div>
+            <span style="font-weight: 700; color: ${isCorrect ? 'var(--success)' : 'var(--danger)'}; font-size: 0.95rem;">
+              ${isCorrect ? '✓ 答對 (+2分)' : '✗ 答錯 (0分)'}
+            </span>
+          </div>
+          <div style="font-weight: 600; margin-bottom: 0.85rem; line-height: 1.6; font-size: 1.05rem;">${q.question}</div>
+          <div>${optsHtml}</div>
+          <div class="review-exp-block">
+            <div style="font-weight: 700; color: #1e3a8a; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.5rem;">
+              <span>💡 正確解答與原因理由解析：</span>
+              <span style="background: var(--primary); color: white; padding: 1px 8px; border-radius: 4px; font-size: 0.85rem;">選 (${q.answer})</span>
+            </div>
+            <div style="color: #334155;">${q.explanation || '考選部核定答案。'}</div>
+            <div style="margin-top: 0.5rem; font-size: 0.85rem; color: #64748b;">
+              作答比對：您選擇了 <strong>${userAns ? userAns : '未作答'}</strong>，官方標準答案為 <strong>${q.answer}</strong>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      document.getElementById('filterWrongBtn').textContent = `錯題回顧 (${wrongCount})`;
+      document.getElementById('filterCorrectBtn').textContent = `答對題目 (${correctCount})`;
+    }
+
+    function filterReview(type, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderReviewList(type);
+    }
+
+    function restartQuiz() {
+      startQuiz();
+    }
+
+    function goHome() {
+      if (timerInterval) clearInterval(timerInterval);
+      document.getElementById('screenResult').classList.remove('active');
+      document.getElementById('screenWelcome').classList.add('active');
+      document.getElementById('headerStats').style.display = 'none';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
